@@ -12,6 +12,8 @@ interface GraphNode {
   rating?: number;
   val: number;
   color: string;
+  x?: number;
+  y?: number;
 }
 
 interface GraphLink {
@@ -57,7 +59,7 @@ export default function ObsidianGraphView({ tools }: ObsidianGraphViewProps) {
           id: domainId,
           name: tool.domain,
           type: 'domain',
-          val: 18,
+          val: 16,
           color: DOMAIN_COLORS[tool.domain] || '#94a3b8',
         });
       }
@@ -117,14 +119,31 @@ export default function ObsidianGraphView({ tools }: ObsidianGraphViewProps) {
       .height(height)
       .backgroundColor('#0b0f17')
       .graphData(graphData)
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      .nodeLabel((n: any) => `${(n as GraphNode).name} (${(n as GraphNode).type})`)
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      .nodeColor((n: any) => (n as GraphNode).color)
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      .nodeVal((n: any) => (n as GraphNode).val)
       .linkColor(() => '#1e2638')
       .linkWidth(1.5)
+      // Render colored circle node AND visible node label text
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      .nodeCanvasObject((node: any, ctx: CanvasRenderingContext2D, globalScale: number) => {
+        const label = node.name || '';
+        const fontSize = Math.max(10 / globalScale, 3);
+        const radius = Math.sqrt(node.val || 6) * 1.8;
+
+        // Draw node circle
+        ctx.beginPath();
+        ctx.arc(node.x, node.y, radius, 0, 2 * Math.PI, false);
+        ctx.fillStyle = node.color || '#3b82f6';
+        ctx.fill();
+        ctx.strokeStyle = '#1e2638';
+        ctx.lineWidth = 1 / globalScale;
+        ctx.stroke();
+
+        // Draw text label
+        ctx.font = `${fontSize}px "JetBrains Mono", monospace`;
+        ctx.textAlign = 'left';
+        ctx.textBaseline = 'middle';
+        ctx.fillStyle = node.type === 'domain' ? '#ffffff' : '#cbd5e1';
+        ctx.fillText(label, node.x + radius + 3, node.y);
+      })
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       .onNodeClick((node: any) => setSelectedNode(node as GraphNode));
 
@@ -164,7 +183,7 @@ export default function ObsidianGraphView({ tools }: ObsidianGraphViewProps) {
             Force-Directed Knowledge Graph
           </h2>
           <p className="text-xs text-slate-400 font-mono mt-0.5">
-            Interactive topology mapping domains, capabilities, and individual tools.
+            Interactive topology mapping domains, capabilities, and individual tools with visible labels.
           </p>
         </div>
 
