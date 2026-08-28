@@ -6,6 +6,7 @@ import Header from '@/components/Header';
 import GodStackGeneratorPanel from '@/components/GodStackGeneratorPanel';
 import ToolLibraryPanel from '@/components/ToolLibraryPanel';
 import QuickIngestPanel from '@/components/QuickIngestPanel';
+import NotesPanel from '@/components/NotesPanel';
 import InstallPrompt from '@/components/InstallPrompt';
 import { getStoredTools, saveStoredTools } from '@/lib/storage';
 import { Tool } from '@/types';
@@ -22,11 +23,11 @@ const ObsidianGraphView = dynamic(() => import('@/components/ObsidianGraphView')
 
 export default function Home() {
   const [tools, setTools] = useState<Tool[]>([]);
-  const [activeTab, setActiveTab] = useState<'generator' | 'graph' | 'library' | 'ingest'>('generator');
+  const [activeTab, setActiveTab] = useState<'generator' | 'graph' | 'library' | 'notes' | 'ingest'>('generator');
   const [isLoaded, setIsLoaded] = useState(false);
   const [showInstallPrompt, setShowInstallPrompt] = useState(false);
 
-  // Legal Modals State (Rules 26 & 27)
+  // Legal Modals State
   const [activeLegalModal, setActiveLegalModal] = useState<'tos' | 'privacy' | null>(null);
 
   useEffect(() => {
@@ -70,7 +71,7 @@ export default function Home() {
         onOpenPrivacy={() => setActiveLegalModal('privacy')}
       />
 
-      <div className="max-w-6xl mx-auto px-6">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6">
         {activeTab === 'generator' && (
           <GodStackGeneratorPanel
             tools={tools}
@@ -84,6 +85,8 @@ export default function Home() {
           <ToolLibraryPanel tools={tools} onDeleteTool={handleDeleteTool} />
         )}
 
+        {activeTab === 'notes' && <NotesPanel />}
+
         {activeTab === 'ingest' && (
           <QuickIngestPanel
             onAddTool={handleAddTool}
@@ -92,8 +95,8 @@ export default function Home() {
         )}
       </div>
 
-      {/* Enterprise Site Footer with TOS & Privacy Policy (Rules 26 & 27) */}
-      <footer className="mt-16 border-t border-[#1e2638] pt-8 pb-12 max-w-6xl mx-auto px-6 flex flex-col md:flex-row items-center justify-between text-xs font-mono text-slate-500">
+      {/* Enterprise Site Footer with TOS & Privacy Policy */}
+      <footer className="mt-16 border-t border-[#1e2638] pt-8 pb-12 max-w-6xl mx-auto px-4 sm:px-6 flex flex-col md:flex-row items-center justify-between text-xs font-mono text-slate-500">
         <div>
           &copy; {new Date().getFullYear()} Brain Capability Engine. All rights reserved.
         </div>
