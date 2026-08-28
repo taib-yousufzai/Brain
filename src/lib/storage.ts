@@ -1,7 +1,8 @@
-import { Tool } from '@/types';
+import { Tool, CustomNote } from '@/types';
 import { PARSED_PUBLIC_TOOLS } from './fileParser';
 
 const STORAGE_KEY = 'brain_tools_dataset_v6';
+const NOTES_STORAGE_KEY = 'brain_custom_notes_v1';
 
 export const INITIAL_SEED_TOOLS: Tool[] = [
   {
@@ -131,5 +132,25 @@ export function saveStoredTools(tools: Tool[]): void {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(clean));
   } catch (error) {
     console.error('Error saving tools to storage:', error);
+  }
+}
+
+export function getStoredNotes(): CustomNote[] {
+  if (typeof window === 'undefined') return [];
+  try {
+    const storedStr = localStorage.getItem(NOTES_STORAGE_KEY);
+    return storedStr ? JSON.parse(storedStr) : [];
+  } catch (error) {
+    console.error('Error reading notes from storage:', error);
+    return [];
+  }
+}
+
+export function saveStoredNotes(notes: CustomNote[]): void {
+  if (typeof window === 'undefined') return;
+  try {
+    localStorage.setItem(NOTES_STORAGE_KEY, JSON.stringify(notes));
+  } catch (error) {
+    console.error('Error saving notes to storage:', error);
   }
 }

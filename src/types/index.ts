@@ -24,6 +24,14 @@ export interface Tool {
   createdAt?: string;
 }
 
+export interface CustomNote {
+  id: string;
+  title: string;
+  category: 'agentic' | 'bestpractices' | 'vibecode' | 'general';
+  content: string;
+  createdAt: string;
+}
+
 export interface GodStackSlot {
   subCapability: string;
   tool: Tool;
