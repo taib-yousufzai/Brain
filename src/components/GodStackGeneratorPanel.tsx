@@ -74,12 +74,12 @@ export default function GodStackGeneratorPanel({ tools, onOpenLibrary }: GodStac
   };
 
   return (
-    <div className="max-w-4xl mx-auto space-y-6 font-sans">
+    <div className="max-w-4xl mx-auto space-y-4 sm:space-y-6 font-sans">
       
       {/* Header Panel */}
-      <div className="bg-[#131823] border border-[#1e2638] p-6 rounded-lg space-y-4">
+      <div className="bg-[#131823] border border-[#1e2638] p-4 sm:p-6 rounded-lg space-y-3 sm:space-y-4">
         <div>
-          <h1 className="text-2xl font-bold text-white font-['Plus_Jakarta_Sans']">
+          <h1 className="text-xl sm:text-2xl font-bold text-white font-['Plus_Jakarta_Sans']">
             God Stack Orchestrator
           </h1>
           <p className="text-xs text-slate-400 font-sans mt-1">
@@ -88,19 +88,19 @@ export default function GodStackGeneratorPanel({ tools, onOpenLibrary }: GodStac
         </div>
 
         {/* Input Form */}
-        <form onSubmit={handleSubmit} className="flex gap-2">
+        <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-2">
           <input
             type="text"
             value={goal}
             onChange={(e) => setGoal(e.target.value)}
             placeholder="Enter workflow objective (e.g. SEO audit, SaaS launch)..."
-            className="flex-1 bg-[#0b0f17] border border-slate-700 rounded-md px-4 py-2.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-blue-500 font-sans"
+            className="flex-1 bg-[#0b0f17] border border-slate-700 rounded-md px-3.5 py-2.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-blue-500 font-sans"
           />
 
           <button
             type="submit"
             disabled={isGenerating || !goal.trim()}
-            className="px-5 py-2.5 bg-blue-600 hover:bg-blue-500 disabled:opacity-50 text-white font-mono font-medium text-xs rounded-md transition-colors cursor-pointer"
+            className="px-5 py-2.5 bg-blue-600 hover:bg-blue-500 disabled:opacity-50 text-white font-mono font-medium text-xs rounded-md transition-colors cursor-pointer shrink-0"
           >
             {isGenerating ? 'Assembling...' : 'Assemble Stack'}
           </button>
@@ -108,7 +108,7 @@ export default function GodStackGeneratorPanel({ tools, onOpenLibrary }: GodStac
 
         {/* Preset Workflow Buttons */}
         <div className="flex flex-wrap items-center gap-2 pt-2 border-t border-slate-800">
-          <span className="text-[11px] font-mono text-slate-500">Presets:</span>
+          <span className="text-[11px] font-mono text-slate-500 w-full sm:w-auto">Presets:</span>
           {PRESET_WORKFLOWS.map((preset) => (
             <button
               key={preset}
@@ -124,19 +124,19 @@ export default function GodStackGeneratorPanel({ tools, onOpenLibrary }: GodStac
       {/* Overview Metadata Bar */}
       <div 
         onClick={onOpenLibrary}
-        className="bg-[#131823] border border-[#1e2638] p-4 rounded-lg flex items-center justify-between text-xs font-mono cursor-pointer hover:border-slate-700 transition-colors"
+        className="bg-[#131823] border border-[#1e2638] p-3.5 sm:p-4 rounded-lg flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 text-xs font-mono cursor-pointer hover:border-slate-700 transition-colors"
       >
-        <div className="flex items-center gap-4 text-slate-300">
+        <div className="flex flex-wrap items-center gap-3 text-slate-300">
           <span>Total Tools: <strong className="text-white">{tools.length}</strong></span>
-          <span className="text-slate-600">|</span>
-          <span>Unique Capabilities: <strong className="text-white">{capabilityCount}</strong></span>
+          <span className="hidden sm:inline text-slate-600">|</span>
+          <span>Capabilities: <strong className="text-white">{capabilityCount}</strong></span>
         </div>
-        <span className="text-blue-400 hover:underline">View Index &rarr;</span>
+        <span className="text-blue-400 hover:underline text-[11px]">View Index &rarr;</span>
       </div>
 
-      {/* Skeleton Loading State (Rule 21: Skeleton Loader) */}
+      {/* Skeleton Loading State */}
       {isGenerating && (
-        <div className="bg-[#131823] border border-[#1e2638] p-6 rounded-lg space-y-4">
+        <div className="bg-[#131823] border border-[#1e2638] p-4 sm:p-6 rounded-lg space-y-4">
           <div className="h-5 w-48 skeleton-box" />
           <div className="space-y-3 pt-2">
             <div className="h-20 w-full skeleton-box" />
@@ -148,11 +148,11 @@ export default function GodStackGeneratorPanel({ tools, onOpenLibrary }: GodStac
 
       {/* Stack Results */}
       {stack && !isGenerating && (
-        <div className="bg-[#131823] border border-[#1e2638] p-6 rounded-lg space-y-5">
+        <div className="bg-[#131823] border border-[#1e2638] p-4 sm:p-6 rounded-lg space-y-4 sm:space-y-5">
           
-          <div className="flex items-center justify-between border-b border-slate-800 pb-4">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-800 pb-4">
             <div>
-              <h2 className="text-lg font-bold text-white font-['Plus_Jakarta_Sans']">
+              <h2 className="text-base sm:text-lg font-bold text-white font-['Plus_Jakarta_Sans']">
                 Assembled Stack: {stack.goal}
               </h2>
               <p className="text-xs font-mono text-slate-400 mt-0.5">
@@ -162,7 +162,7 @@ export default function GodStackGeneratorPanel({ tools, onOpenLibrary }: GodStac
 
             <button
               onClick={handleCopyMarkdown}
-              className="px-3.5 py-1.5 rounded bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-mono transition-colors cursor-pointer"
+              className="px-3.5 py-1.5 rounded bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-mono transition-colors cursor-pointer self-start sm:self-auto shrink-0"
             >
               {copied ? 'Copied to Clipboard' : 'Copy Markdown'}
             </button>
@@ -172,23 +172,23 @@ export default function GodStackGeneratorPanel({ tools, onOpenLibrary }: GodStac
             {stack.slots.map((slot, index) => (
               <div
                 key={slot.tool.id}
-                className="bg-[#0b0f17] border border-slate-800 p-4 rounded-md space-y-2"
+                className="bg-[#0b0f17] border border-slate-800 p-3.5 sm:p-4 rounded-md space-y-2"
               >
-                <div className="flex items-center justify-between text-xs font-mono">
-                  <div className="flex items-center gap-2">
-                    <span className="px-2 py-0.5 rounded bg-blue-950 text-blue-300 border border-blue-800 font-semibold">
+                <div className="flex flex-wrap items-center justify-between gap-2 text-xs font-mono">
+                  <div className="flex flex-wrap items-center gap-2">
+                    <span className="px-2 py-0.5 rounded bg-blue-950 text-blue-300 border border-blue-800 font-semibold text-[11px]">
                       Slot {index + 1}: {slot.subCapability}
                     </span>
-                    <span className="text-slate-400">{slot.tool.domain}</span>
+                    <span className="text-slate-400 text-[11px]">{slot.tool.domain}</span>
                   </div>
 
-                  <span className="text-amber-400 font-bold">
+                  <span className="text-amber-400 font-bold text-[11px]">
                     Rating: {slot.tool.rating}/10
                   </span>
                 </div>
 
-                <div className="flex items-baseline justify-between pt-1">
-                  <h3 className="text-base font-bold text-white font-['Plus_Jakarta_Sans']">
+                <div className="flex flex-wrap items-baseline justify-between gap-1 pt-1">
+                  <h3 className="text-sm sm:text-base font-bold text-white font-['Plus_Jakarta_Sans']">
                     {slot.tool.title}
                   </h3>
 

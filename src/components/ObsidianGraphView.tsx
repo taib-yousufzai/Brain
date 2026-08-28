@@ -51,7 +51,6 @@ export default function ObsidianGraphView({ tools }: ObsidianGraphViewProps) {
       : tools.filter((t) => t.domain === filterDomain);
 
     activeTools.forEach((tool) => {
-      // Domain Node
       const domainId = `domain-${tool.domain}`;
       if (!nodesMap.has(domainId)) {
         nodesMap.set(domainId, {
@@ -63,7 +62,6 @@ export default function ObsidianGraphView({ tools }: ObsidianGraphViewProps) {
         });
       }
 
-      // Capability Node
       const capId = `cap-${tool.domain}-${tool.subCapability}`;
       if (!nodesMap.has(capId)) {
         nodesMap.set(capId, {
@@ -82,7 +80,6 @@ export default function ObsidianGraphView({ tools }: ObsidianGraphViewProps) {
         });
       }
 
-      // Tool Node
       const toolNodeId = tool.id;
       nodesMap.set(toolNodeId, {
         id: toolNodeId,
@@ -111,7 +108,7 @@ export default function ObsidianGraphView({ tools }: ObsidianGraphViewProps) {
     if (!containerRef.current) return;
 
     const width = containerRef.current.clientWidth || 800;
-    const height = 550;
+    const height = Math.min(550, Math.max(350, window.innerHeight * 0.55));
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const createGraph = ForceGraph as any;
@@ -133,7 +130,18 @@ export default function ObsidianGraphView({ tools }: ObsidianGraphViewProps) {
 
     graphInstanceRef.current = graph;
 
+    const handleResize = () => {
+      if (containerRef.current && graphInstanceRef.current) {
+        const newWidth = containerRef.current.clientWidth || 800;
+        const newHeight = Math.min(550, Math.max(350, window.innerHeight * 0.55));
+        graphInstanceRef.current.width(newWidth).height(newHeight);
+      }
+    };
+
+    window.addEventListener('resize', handleResize);
+
     return () => {
+      window.removeEventListener('resize', handleResize);
       if (containerRef.current) {
         containerRef.current.innerHTML = '';
       }
@@ -147,12 +155,12 @@ export default function ObsidianGraphView({ tools }: ObsidianGraphViewProps) {
   };
 
   return (
-    <div className="bg-[#131823] border border-[#1e2638] rounded-lg p-5 space-y-4 font-sans">
+    <div className="bg-[#131823] border border-[#1e2638] rounded-lg p-4 sm:p-5 space-y-3 sm:space-y-4 font-sans">
       
       {/* Controls Bar */}
-      <div className="flex flex-col md:flex-row items-center justify-between gap-4 border-b border-[#1e2638] pb-4">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 border-b border-[#1e2638] pb-3 sm:pb-4">
         <div>
-          <h2 className="text-lg font-bold text-white font-['Plus_Jakarta_Sans']">
+          <h2 className="text-base sm:text-lg font-bold text-white font-['Plus_Jakarta_Sans']">
             Force-Directed Knowledge Graph
           </h2>
           <p className="text-xs text-slate-400 font-mono mt-0.5">
@@ -160,11 +168,11 @@ export default function ObsidianGraphView({ tools }: ObsidianGraphViewProps) {
           </p>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 self-stretch sm:self-auto justify-between sm:justify-start">
           <select
             value={filterDomain}
             onChange={(e) => setFilterDomain(e.target.value as Domain | 'All')}
-            className="bg-[#0b0f17] border border-slate-700 rounded px-3 py-1.5 text-xs text-white font-mono cursor-pointer"
+            className="bg-[#0b0f17] border border-slate-700 rounded px-2.5 py-1.5 text-xs text-white font-mono cursor-pointer"
           >
             <option value="All">All Domains</option>
             {Object.keys(DOMAIN_COLORS).map((d) => (
@@ -184,19 +192,19 @@ export default function ObsidianGraphView({ tools }: ObsidianGraphViewProps) {
       </div>
 
       {/* Canvas Viewport Container */}
-      <div className="relative min-h-[500px] h-[550px] bg-[#0b0f17] border border-[#1e2638] rounded overflow-hidden">
+      <div className="relative min-h-[350px] sm:min-h-[450px] h-[400px] sm:h-[550px] bg-[#0b0f17] border border-[#1e2638] rounded overflow-hidden">
         <div ref={containerRef} className="w-full h-full" />
 
         {/* Selected Node Details Drawer */}
         {selectedNode && (
-          <div className="absolute top-4 right-4 bg-[#131823] border border-[#1e2638] p-4 rounded max-w-xs text-xs font-mono space-y-2 text-slate-300 shadow-xl">
+          <div className="absolute top-3 right-3 left-3 sm:left-auto bg-[#131823] border border-[#1e2638] p-3.5 rounded sm:max-w-xs text-xs font-mono space-y-2 text-slate-300 shadow-xl z-10">
             <div className="flex items-center justify-between border-b border-slate-800 pb-2">
               <span className="font-bold text-white uppercase text-[10px]">
                 {selectedNode.type} Node
               </span>
               <button
                 onClick={() => setSelectedNode(null)}
-                className="text-slate-500 hover:text-white cursor-pointer"
+                className="text-slate-500 hover:text-white cursor-pointer px-1"
               >
                 x
               </button>
@@ -215,18 +223,18 @@ export default function ObsidianGraphView({ tools }: ObsidianGraphViewProps) {
       </div>
 
       {/* Graph Legend */}
-      <div className="flex flex-wrap items-center gap-4 text-xs font-mono text-slate-400 pt-2 border-t border-[#1e2638]">
+      <div className="flex flex-wrap items-center gap-3 sm:gap-4 text-[11px] sm:text-xs font-mono text-slate-400 pt-2 border-t border-[#1e2638]">
         <div className="flex items-center gap-1.5">
           <span className="w-3 h-3 rounded-full bg-blue-500 inline-block" />
-          <span>Domain Node</span>
+          <span>Domain</span>
         </div>
         <div className="flex items-center gap-1.5">
           <span className="w-2.5 h-2.5 rounded-full bg-slate-400 inline-block" />
-          <span>Sub-Capability</span>
+          <span>Capability</span>
         </div>
         <div className="flex items-center gap-1.5">
           <span className="w-2 h-2 rounded-full bg-amber-400 inline-block" />
-          <span>Gold Tier Tool (9.8+)</span>
+          <span>Gold Tool (9.8+)</span>
         </div>
       </div>
 
