@@ -9,18 +9,12 @@
 
 ---
 
-## 2. Selected UI Aesthetic: Swiss Editorial Bento-Glass
+## 2. Selected UI Aesthetic: Emil Kowalski Design & UI Taste
 
-* **Style Architecture (Swiss Editorial + Bento Grid + Glassmorphism)**:
-  * **Bento Grid Layout**: All tool cards, capability slots, metrics, and God-Stack output panels are structured in asymmetric, modular Bento Grid cards.
-  * **Swiss Editorial Typography**: Ultra-clean typographic hierarchy, huge bold headlines, crisp mathematical grid alignments, and high-contrast editorial data displays.
-  * **Obsidian Glassmorphism**: Translucent dark glass cards (`rgba(18, 21, 30, 0.65)` + `backdrop-filter: blur(16px)`) with glowing 1px borders and dynamic hover spotlights.
-
-* **Animation & Interaction Stack**:
-  * **Lenis (`@darkroom.engineering/lenis`)**: Liquid inertia smooth scrolling across desktop and mobile viewports.
-  * **GSAP (GreenSock)**: Timeline-driven "God Stack" assembly animations—cards dynamically glide and lock into their capability slots when generated.
-  * **Vanta.js (`vanta/dist/vanta.net.min.js` or `vanta.topology`)**: Dark interactive 3D neural-net background matrix reacting subtly to cursor movement.
-  * **React Bits**: Spotlight cursor tracking, 3D card tilt effects, magnetic action buttons, and animated gradient text highlights.
+* **Style Architecture (Emil Kowalski High-Density Slate Industrial)**:
+  * **Emil Kowalski Design Standard**: Snappy micro-interactions (150-200ms ease), high-density data layout grids, and strict typography contrast.
+  * **Slate Industrial Surface**: Deep dark background (`#0b0f17`), structured cards (`#131823`), and crisp 1px borders (`#1e2638`).
+  * **Skeleton Loading**: Integrated `skeleton-box` keyframe loaders matching component geometry to prevent layout shift.
 
 ---
 

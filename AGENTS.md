@@ -7,3 +7,13 @@ This version has breaking changes — APIs, conventions, and file structure may 
 This block is written and re-added by `next dev` — verify at `node_modules/next/dist/server/lib/generate-agent-files.js`. Removing it from a diff only re-creates the uncommitted change; committing it with your work keeps the tree clean.
 
 <!-- END:nextjs-agent-rules -->
+
+# Global Project Skills & Standards
+
+## 🎨 Installed Skill: Emil Kowalski Design & UI Taste
+- **Reference**: `skills/emil-kowalski-design.md`
+- **Principles**:
+  - Snappy 150-200ms micro-interactions.
+  - High-density dark slate palette (`#0b0f17` background, `#131823` surface, `#1e2638` borders).
+  - High typographic contrast with clean sans-serif headers and monospace metrics.
+  - Zero non-deterministic loading spinners (use skeleton pulse loaders).
