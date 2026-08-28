@@ -34,11 +34,11 @@ export default function CommandPaletteModal({
 
   // Static navigation actions
   const navActions = [
-    { type: 'nav' as const, label: 'Go to God-Stack Generator', tab: 'generator' as const, category: 'Navigation' },
-    { type: 'nav' as const, label: 'Go to Tool Library Catalog', tab: 'library' as const, category: 'Navigation' },
-    { type: 'nav' as const, label: 'Go to Notes & Knowledge Vault', tab: 'notes' as const, category: 'Navigation' },
-    { type: 'nav' as const, label: 'Go to Interactive Graph View', tab: 'graph' as const, category: 'Navigation' },
-    { type: 'nav' as const, label: 'Go to AI Skills & Repos Vault', tab: 'skills' as const, category: 'Navigation' },
+    { type: 'nav' as const, label: 'Go to God-Stack Generator', tab: 'generator' as const, category: 'Navigation', badge: 'ACTION' },
+    { type: 'nav' as const, label: 'Go to Tool Library Catalog', tab: 'library' as const, category: 'Navigation', badge: 'ACTION' },
+    { type: 'nav' as const, label: 'Go to Notes & Knowledge Vault', tab: 'notes' as const, category: 'Navigation', badge: 'ACTION' },
+    { type: 'nav' as const, label: 'Go to Interactive Graph View', tab: 'graph' as const, category: 'Navigation', badge: 'ACTION' },
+    { type: 'nav' as const, label: 'Go to AI Skills & Repos Vault', tab: 'skills' as const, category: 'Navigation', badge: 'ACTION' },
   ];
 
   // Filter tools matching query
@@ -54,10 +54,11 @@ export default function CommandPaletteModal({
         .slice(0, 8)
         .map((t) => ({
           type: 'tool' as const,
-          label: `${t.title} (${t.domain})`,
-          sub: t.subCapability,
+          label: t.title,
+          sub: `${t.domain} • ${t.subCapability}`,
           tool: t,
           category: 'Tools & Capabilities',
+          badge: t.category === 'skill' || t.domain === 'AI & Prompting' ? 'SKILL' : 'TOOL',
         }))
     : [];
 
@@ -72,9 +73,10 @@ export default function CommandPaletteModal({
         .slice(0, 4)
         .map((n) => ({
           type: 'note' as const,
-          label: `Note: ${n.title}`,
+          label: n.title,
           sub: n.content.substring(0, 60) + '...',
           category: 'Custom Notes',
+          badge: 'NOTE',
         }))
     : [];
 
@@ -155,6 +157,15 @@ export default function CommandPaletteModal({
           ) : (
             combinedResults.map((item, idx) => {
               const isSelected = idx === selectedIndex;
+              const badgeStyle =
+                item.badge === 'TOOL'
+                  ? 'bg-blue-950 text-blue-300 border-blue-800'
+                  : item.badge === 'SKILL'
+                  ? 'bg-purple-950 text-purple-300 border-purple-800'
+                  : item.badge === 'NOTE'
+                  ? 'bg-amber-950 text-amber-300 border-amber-800'
+                  : 'bg-slate-800 text-slate-300 border-slate-700';
+
               return (
                 <button
                   key={idx}
@@ -166,13 +177,16 @@ export default function CommandPaletteModal({
                 >
                   <div className="space-y-0.5">
                     <div className="font-medium text-white flex items-center gap-2">
+                      <span className={`px-1.5 py-0.5 rounded border font-mono text-[9px] font-bold ${badgeStyle}`}>
+                        {item.badge}
+                      </span>
                       <span>{item.label}</span>
                     </div>
                     {'sub' in item && item.sub && (
                       <div className="text-[11px] text-slate-400 font-mono truncate max-w-md">{item.sub}</div>
                     )}
                   </div>
-                  <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-slate-900 text-slate-400 border border-slate-800 shrink-0">
+                  <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-slate-900 text-slate-400 border border-slate-800 shrink-0 ml-2">
                     {item.category}
                   </span>
                 </button>

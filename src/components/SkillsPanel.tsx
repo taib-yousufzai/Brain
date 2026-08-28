@@ -111,8 +111,11 @@ export default function SkillsPanel({ tools }: SkillsPanelProps) {
             </p>
           </div>
 
-          <div className="text-xs font-mono text-slate-400 bg-slate-900 px-3 py-1.5 rounded border border-slate-800 self-start sm:self-auto">
-            Category: <span className="text-blue-400 font-bold">AI Skills & Repos</span>
+          <div className="text-xs font-mono text-slate-400 bg-slate-900 px-3 py-1.5 rounded border border-slate-800 self-start sm:self-auto flex items-center gap-2">
+            <span className="px-2 py-0.5 rounded bg-purple-950 text-purple-300 border border-purple-800 font-mono text-[10px] font-bold uppercase">
+              SKILL
+            </span>
+            <span>AI Skills & Repos</span>
           </div>
         </div>
 
@@ -135,9 +138,15 @@ export default function SkillsPanel({ tools }: SkillsPanelProps) {
           >
             <div className="space-y-2">
               <div className="flex items-center justify-between font-mono text-xs">
-                <span className="px-2 py-0.5 rounded bg-blue-950 text-blue-300 border border-blue-800 text-[10px]">
-                  {skill.category}
-                </span>
+                <div className="flex items-center gap-1.5">
+                  <span className="px-2 py-0.5 rounded bg-purple-950 text-purple-300 border border-purple-800 font-mono text-[10px] font-bold uppercase">
+                    SKILL
+                  </span>
+                  <span className="px-2 py-0.5 rounded bg-blue-950 text-blue-300 border border-blue-800 text-[10px]">
+                    {skill.category}
+                  </span>
+                </div>
+
                 <span className="text-amber-400 font-bold text-[11px]">
                   Rating: {skill.rating}/10
                 </span>
@@ -153,7 +162,7 @@ export default function SkillsPanel({ tools }: SkillsPanelProps) {
             </div>
 
             <div className="pt-3 border-t border-slate-800 flex items-center justify-between font-mono text-xs">
-              <span className="text-slate-500 text-[11px]">Category: Skill / Repo</span>
+              <span className="text-slate-500 text-[11px]">Type: AI Skill / Repo</span>
               <a
                 href={skill.url}
                 target="_blank"
@@ -170,14 +179,22 @@ export default function SkillsPanel({ tools }: SkillsPanelProps) {
       {/* User Custom Ingested AI Skills Section */}
       {userSkills.length > 0 && (
         <div className="bg-[#131823] border border-[#1e2638] p-5 rounded-lg space-y-3">
-          <h3 className="text-sm font-bold text-white font-['Plus_Jakarta_Sans'] font-mono">
-            User Ingested AI Skills ({userSkills.length})
+          <h3 className="text-sm font-bold text-white font-['Plus_Jakarta_Sans'] font-mono flex items-center gap-2">
+            <span className="px-2 py-0.5 rounded bg-purple-950 text-purple-300 border border-purple-800 font-mono text-[10px] font-bold uppercase">
+              SKILL
+            </span>
+            <span>User Ingested AI Skills ({userSkills.length})</span>
           </h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
             {userSkills.map((tool) => (
               <div key={tool.id} className="bg-[#0b0f17] border border-slate-800 p-3.5 rounded text-xs space-y-2">
                 <div className="flex justify-between font-mono text-[11px]">
-                  <span className="text-blue-400">{tool.subCapability}</span>
+                  <div className="flex items-center gap-1.5">
+                    <span className="px-1.5 py-0.5 rounded bg-purple-950 text-purple-300 border border-purple-800 font-mono text-[9px] font-bold uppercase">
+                      SKILL
+                    </span>
+                    <span className="text-blue-400">{tool.subCapability}</span>
+                  </div>
                   <span className="text-amber-400">{tool.rating}/10</span>
                 </div>
                 <div className="font-bold text-white text-sm">{tool.title}</div>

@@ -148,9 +148,15 @@ export default function ToolLibraryPanel({ tools, onDeleteTool }: ToolLibraryPan
                 className="bg-[#131823] border border-[#1e2638] p-4 rounded-lg space-y-2 text-xs"
               >
                 <div className="flex items-center justify-between">
-                  <span className="px-2 py-0.5 rounded bg-slate-800 border border-slate-700 font-mono text-[10px] text-slate-300">
-                    {tool.domain}
-                  </span>
+                  <div className="flex items-center gap-1.5">
+                    <span className="px-2 py-0.5 rounded bg-blue-950 text-blue-300 border border-blue-800 font-mono text-[10px] font-bold uppercase">
+                      TOOL
+                    </span>
+                    <span className="px-2 py-0.5 rounded bg-slate-800 border border-slate-700 font-mono text-[10px] text-slate-300">
+                      {tool.domain}
+                    </span>
+                  </div>
+
                   <span className="font-mono font-bold text-amber-400">
                     {tool.rating}/10
                   </span>
@@ -189,6 +195,7 @@ export default function ToolLibraryPanel({ tools, onDeleteTool }: ToolLibraryPan
             <table className="w-full text-left border-collapse min-w-[650px]">
               <thead>
                 <tr className="bg-[#0b0f17] border-b border-[#1e2638] text-[11px] font-mono text-slate-400">
+                  <th className="py-3 px-4">Type</th>
                   <th className="py-3 px-4">Tool Name</th>
                   <th className="py-3 px-4">Domain</th>
                   <th className="py-3 px-4">Sub-Capability Slot</th>
@@ -199,6 +206,11 @@ export default function ToolLibraryPanel({ tools, onDeleteTool }: ToolLibraryPan
               <tbody className="divide-y divide-[#1e2638] text-xs">
                 {filteredTools.map((tool) => (
                   <tr key={tool.id} className="hover:bg-[#182030] transition-colors">
+                    <td className="py-3 px-4 font-mono">
+                      <span className="px-2 py-0.5 rounded bg-blue-950 text-blue-300 border border-blue-800 text-[10px] font-bold uppercase">
+                        TOOL
+                      </span>
+                    </td>
                     <td className="py-3 px-4">
                       <div className="font-bold text-white font-['Plus_Jakarta_Sans']">{tool.title}</div>
                       <div className="text-slate-400 text-[11px] font-sans line-clamp-1 mt-0.5">{tool.description}</div>
