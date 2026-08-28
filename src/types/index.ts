@@ -8,6 +8,8 @@ export type Domain =
   | 'AI & Prompting'
   | 'Productivity';
 
+export type ResourceCategory = 'tool' | 'skill' | 'repo';
+
 export interface Tool {
   id: string;
   title: string;
@@ -18,6 +20,7 @@ export interface Tool {
   rating: number;
   notes?: string;
   tags: string[];
+  category?: ResourceCategory;
   createdAt?: string;
 }
 

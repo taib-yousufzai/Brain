@@ -7,6 +7,7 @@ import GodStackGeneratorPanel from '@/components/GodStackGeneratorPanel';
 import ToolLibraryPanel from '@/components/ToolLibraryPanel';
 import QuickIngestPanel from '@/components/QuickIngestPanel';
 import NotesPanel from '@/components/NotesPanel';
+import SkillsPanel from '@/components/SkillsPanel';
 import InstallPrompt from '@/components/InstallPrompt';
 import { getStoredTools, saveStoredTools } from '@/lib/storage';
 import { Tool } from '@/types';
@@ -23,7 +24,7 @@ const ObsidianGraphView = dynamic(() => import('@/components/ObsidianGraphView')
 
 export default function Home() {
   const [tools, setTools] = useState<Tool[]>([]);
-  const [activeTab, setActiveTab] = useState<'generator' | 'graph' | 'library' | 'notes' | 'ingest'>('generator');
+  const [activeTab, setActiveTab] = useState<'generator' | 'graph' | 'library' | 'skills' | 'notes' | 'ingest'>('generator');
   const [isLoaded, setIsLoaded] = useState(false);
   const [showInstallPrompt, setShowInstallPrompt] = useState(false);
 
@@ -84,6 +85,8 @@ export default function Home() {
         {activeTab === 'library' && (
           <ToolLibraryPanel tools={tools} onDeleteTool={handleDeleteTool} />
         )}
+
+        {activeTab === 'skills' && <SkillsPanel tools={tools} />}
 
         {activeTab === 'notes' && <NotesPanel />}
 

@@ -5,8 +5,8 @@ import React, { useState } from 'react';
 interface HeaderProps {
   toolCount: number;
   domainCount: number;
-  activeTab: 'generator' | 'graph' | 'library' | 'notes' | 'ingest';
-  setActiveTab: (tab: 'generator' | 'graph' | 'library' | 'notes' | 'ingest') => void;
+  activeTab: 'generator' | 'graph' | 'library' | 'skills' | 'notes' | 'ingest';
+  setActiveTab: (tab: 'generator' | 'graph' | 'library' | 'skills' | 'notes' | 'ingest') => void;
   onOpenInstall?: () => void;
   onOpenTOS?: () => void;
   onOpenPrivacy?: () => void;
@@ -77,6 +77,17 @@ export default function Header({
             }`}
           >
             Library ({toolCount})
+          </button>
+
+          <button
+            onClick={() => setActiveTab('skills')}
+            className={`px-3 py-1.5 rounded-md transition-colors cursor-pointer ${
+              activeTab === 'skills'
+                ? 'bg-blue-600 text-white font-semibold'
+                : 'text-slate-400 hover:text-white hover:bg-slate-800'
+            }`}
+          >
+            AI Skills & Repos
           </button>
 
           <button
@@ -181,6 +192,17 @@ export default function Header({
             }`}
           >
             Library ({toolCount})
+          </button>
+          <button
+            onClick={() => {
+              setActiveTab('skills');
+              setMobileMenuOpen(false);
+            }}
+            className={`w-full text-left px-3 py-2 rounded ${
+              activeTab === 'skills' ? 'bg-blue-600 text-white font-bold' : 'text-slate-300'
+            }`}
+          >
+            AI Skills & Repos
           </button>
           <button
             onClick={() => {
