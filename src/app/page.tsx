@@ -9,8 +9,9 @@ import QuickIngestPanel from '@/components/QuickIngestPanel';
 import NotesPanel from '@/components/NotesPanel';
 import SkillsPanel from '@/components/SkillsPanel';
 import InstallPrompt from '@/components/InstallPrompt';
-import { getStoredTools, saveStoredTools } from '@/lib/storage';
-import { Tool } from '@/types';
+import CommandPaletteModal from '@/components/CommandPaletteModal';
+import { getStoredTools, saveStoredTools, getStoredNotes } from '@/lib/storage';
+import { Tool, CustomNote } from '@/types';
 
 // Dynamically import graph view with SSR disabled
 const ObsidianGraphView = dynamic(() => import('@/components/ObsidianGraphView'), {
@@ -24,17 +25,33 @@ const ObsidianGraphView = dynamic(() => import('@/components/ObsidianGraphView')
 
 export default function Home() {
   const [tools, setTools] = useState<Tool[]>([]);
+  const [customNotes, setCustomNotes] = useState<CustomNote[]>([]);
   const [activeTab, setActiveTab] = useState<'generator' | 'graph' | 'library' | 'skills' | 'notes' | 'ingest'>('generator');
   const [isLoaded, setIsLoaded] = useState(false);
   const [showInstallPrompt, setShowInstallPrompt] = useState(false);
+  const [isCommandPaletteOpen, setIsCommandPaletteOpen] = useState(false);
 
   // Legal Modals State
   const [activeLegalModal, setActiveLegalModal] = useState<'tos' | 'privacy' | null>(null);
 
   useEffect(() => {
-    const loaded = getStoredTools();
-    setTools(loaded);
+    const loadedTools = getStoredTools();
+    const loadedNotes = getStoredNotes();
+    setTools(loadedTools);
+    setCustomNotes(loadedNotes);
     setIsLoaded(true);
+  }, []);
+
+  // Global Keyboard Listener for Cmd+K / Ctrl+K
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
+        e.preventDefault();
+        setIsCommandPaletteOpen((prev) => !prev);
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
   }, []);
 
   const handleAddTool = (newTool: Tool) => {
@@ -67,6 +84,7 @@ export default function Home() {
         domainCount={domainCount}
         activeTab={activeTab}
         setActiveTab={setActiveTab}
+        onOpenCommandPalette={() => setIsCommandPaletteOpen(true)}
         onOpenInstall={() => setShowInstallPrompt(true)}
         onOpenTOS={() => setActiveLegalModal('tos')}
         onOpenPrivacy={() => setActiveLegalModal('privacy')}
@@ -97,6 +115,19 @@ export default function Home() {
           />
         )}
       </div>
+
+      {/* Global Cmd + K Command Palette Overlay */}
+      <CommandPaletteModal
+        isOpen={isCommandPaletteOpen}
+        onClose={() => setIsCommandPaletteOpen(false)}
+        tools={tools}
+        customNotes={customNotes}
+        onSelectTab={(tab) => {
+          if (tab === 'generator' || tab === 'graph' || tab === 'library' || tab === 'skills' || tab === 'notes') {
+            setActiveTab(tab);
+          }
+        }}
+      />
 
       {/* Enterprise Site Footer with TOS & Privacy Policy */}
       <footer className="mt-16 border-t border-[#1e2638] pt-8 pb-12 max-w-6xl mx-auto px-4 sm:px-6 flex flex-col md:flex-row items-center justify-between text-xs font-mono text-slate-500">

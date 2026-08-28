@@ -20,12 +20,27 @@ const ALL_DOMAINS: (Domain | 'All')[] = [
   'Productivity',
 ];
 
+const POPULAR_TAGS = [
+  'gold-tier',
+  'ai-slop-killer',
+  'mcp',
+  'seo',
+  'copywriter-killer',
+  'humanizer',
+  'conversion',
+  'yagni',
+  'micro-interactions',
+];
+
 export default function ToolLibraryPanel({ tools, onDeleteTool }: ToolLibraryPanelProps) {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedDomain, setSelectedDomain] = useState<Domain | 'All'>('All');
+  const [selectedTag, setSelectedTag] = useState<string | null>(null);
 
   const filteredTools = tools.filter((tool) => {
     const matchesDomain = selectedDomain === 'All' || tool.domain === selectedDomain;
+    const matchesTag = !selectedTag || tool.tags.some((t) => t.toLowerCase() === selectedTag.toLowerCase());
+
     const q = searchQuery.toLowerCase();
     const matchesSearch =
       tool.title.toLowerCase().includes(q) ||
@@ -33,7 +48,7 @@ export default function ToolLibraryPanel({ tools, onDeleteTool }: ToolLibraryPan
       tool.subCapability.toLowerCase().includes(q) ||
       tool.tags.some((t) => t.toLowerCase().includes(q));
 
-    return matchesDomain && matchesSearch;
+    return matchesDomain && matchesTag && matchesSearch;
   });
 
   return (
@@ -65,7 +80,7 @@ export default function ToolLibraryPanel({ tools, onDeleteTool }: ToolLibraryPan
               <button
                 key={domain}
                 onClick={() => setSelectedDomain(domain)}
-                className={`px-2.5 sm:px-3 py-1.5 rounded-md text-xs font-mono transition-colors cursor-pointer whitespace-nowrap ${
+                className={`px-2.5 sm:px-3 py-1.5 rounded-md text-xs font-mono transition-colors cursor-pointer whitespace-nowrap active:scale-[0.98] ${
                   isActive
                     ? 'bg-blue-600 text-white font-semibold'
                     : 'bg-slate-800 text-slate-400 hover:text-white hover:bg-slate-700'
@@ -75,6 +90,35 @@ export default function ToolLibraryPanel({ tools, onDeleteTool }: ToolLibraryPan
               </button>
             );
           })}
+        </div>
+
+        {/* Tag Filter Chips */}
+        <div className="flex flex-wrap items-center gap-1.5 pt-2 border-t border-slate-800 text-[11px] font-mono">
+          <span className="text-slate-500 mr-1">Tags:</span>
+          {POPULAR_TAGS.map((tag) => {
+            const isTagActive = selectedTag === tag;
+            return (
+              <button
+                key={tag}
+                onClick={() => setSelectedTag(isTagActive ? null : tag)}
+                className={`px-2 py-0.5 rounded transition-colors cursor-pointer active:scale-[0.98] ${
+                  isTagActive
+                    ? 'bg-blue-950 text-blue-300 border border-blue-600 font-bold'
+                    : 'bg-slate-900/80 text-slate-400 border border-slate-800 hover:text-slate-200 hover:border-slate-700'
+                }`}
+              >
+                #{tag}
+              </button>
+            );
+          })}
+          {selectedTag && (
+            <button
+              onClick={() => setSelectedTag(null)}
+              className="text-rose-400 hover:underline cursor-pointer ml-2"
+            >
+              Clear Tag
+            </button>
+          )}
         </div>
       </div>
 
@@ -86,8 +130,9 @@ export default function ToolLibraryPanel({ tools, onDeleteTool }: ToolLibraryPan
             onClick={() => {
               setSearchQuery('');
               setSelectedDomain('All');
+              setSelectedTag(null);
             }}
-            className="px-3.5 py-1.5 rounded bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-mono transition-colors cursor-pointer"
+            className="px-3.5 py-1.5 rounded bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-mono transition-colors cursor-pointer active:scale-[0.98]"
           >
             Reset Filters
           </button>

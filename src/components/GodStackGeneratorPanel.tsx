@@ -21,7 +21,8 @@ export default function GodStackGeneratorPanel({ tools, onOpenLibrary }: GodStac
   const [goal, setGoal] = useState('');
   const [stack, setStack] = useState<GodStack | null>(null);
   const [isGenerating, setIsGenerating] = useState(false);
-  const [copied, setCopied] = useState(false);
+  const [copiedMd, setCopiedMd] = useState(false);
+  const [copiedPrompt, setCopiedPrompt] = useState(false);
 
   const capabilityCount = new Set(tools.map((t) => t.subCapability)).size;
 
@@ -69,8 +70,29 @@ export default function GodStackGeneratorPanel({ tools, onOpenLibrary }: GodStac
     });
 
     navigator.clipboard.writeText(md);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
+    setCopiedMd(true);
+    setTimeout(() => setCopiedMd(false), 2000);
+  };
+
+  const handleCopySystemPrompt = () => {
+    if (!stack) return;
+
+    let prompt = `<system_prompt>\n`;
+    prompt += `You are an elite AI orchestrator tasked with achieving the goal: "${stack.goal}".\n`;
+    prompt += `Operate under the following mandatory tool & capability stack:\n\n`;
+
+    stack.slots.forEach((slot, idx) => {
+      prompt += `${idx + 1}. [${slot.subCapability}] ${slot.tool.title}\n`;
+      prompt += `   - Guideline: ${slot.tool.description}\n`;
+      if (slot.tool.notes) prompt += `   - Notes: ${slot.tool.notes}\n`;
+    });
+
+    prompt += `\nStrictly follow Ponytail YAGNI principles, minimum viable diff, and zero hallucinated APIs.\n`;
+    prompt += `</system_prompt>`;
+
+    navigator.clipboard.writeText(prompt);
+    setCopiedPrompt(true);
+    setTimeout(() => setCopiedPrompt(false), 2000);
   };
 
   return (
@@ -100,7 +122,7 @@ export default function GodStackGeneratorPanel({ tools, onOpenLibrary }: GodStac
           <button
             type="submit"
             disabled={isGenerating || !goal.trim()}
-            className="px-5 py-2.5 bg-blue-600 hover:bg-blue-500 disabled:opacity-50 text-white font-mono font-medium text-xs rounded-md transition-colors cursor-pointer shrink-0"
+            className="px-5 py-2.5 bg-blue-600 hover:bg-blue-500 disabled:opacity-50 text-white font-mono font-medium text-xs rounded-md transition-colors cursor-pointer shrink-0 active:scale-[0.98]"
           >
             {isGenerating ? 'Assembling...' : 'Assemble Stack'}
           </button>
@@ -113,7 +135,7 @@ export default function GodStackGeneratorPanel({ tools, onOpenLibrary }: GodStac
             <button
               key={preset}
               onClick={() => handleRunPreset(preset)}
-              className="px-2.5 py-1 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-mono transition-colors cursor-pointer"
+              className="px-2.5 py-1 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-mono transition-colors cursor-pointer active:scale-[0.98]"
             >
               {preset}
             </button>
@@ -160,12 +182,21 @@ export default function GodStackGeneratorPanel({ tools, onOpenLibrary }: GodStac
               </p>
             </div>
 
-            <button
-              onClick={handleCopyMarkdown}
-              className="px-3.5 py-1.5 rounded bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-mono transition-colors cursor-pointer self-start sm:self-auto shrink-0"
-            >
-              {copied ? 'Copied to Clipboard' : 'Copy Markdown'}
-            </button>
+            <div className="flex items-center gap-2 self-start sm:self-auto shrink-0">
+              <button
+                onClick={handleCopySystemPrompt}
+                className="px-3 py-1.5 rounded bg-blue-950 hover:bg-blue-900 border border-blue-800 text-blue-200 text-xs font-mono transition-colors cursor-pointer active:scale-[0.98]"
+              >
+                {copiedPrompt ? 'Copied Prompt ✓' : 'Copy System Prompt'}
+              </button>
+
+              <button
+                onClick={handleCopyMarkdown}
+                className="px-3 py-1.5 rounded bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-mono transition-colors cursor-pointer active:scale-[0.98]"
+              >
+                {copiedMd ? 'Copied Markdown ✓' : 'Copy Markdown'}
+              </button>
+            </div>
           </div>
 
           <div className="space-y-3">
