@@ -1,0 +1,415 @@
+website
+    1. https://bagui.vercel.app/
+    2. https://orbs.jakubantalik.com/
+    3. https://codefronts.com/
+    4. https://yerd.app/
+    5. https://www.typeface.fyi/
+    6. https://www.ivpn.net/en/
+    7. podium.global
+    8. lenis.dev
+    9. rive.app
+    10. godly.website
+    11. https://proxmox.com/en/
+
+Github tools
+    1. https://github.com/peon-sh/peon --> Open-source, self-hostable deployment platform.
+
+    2. https://github.com/allenai/olmocr --> A toolkit for converting PDFs and other image-based document formats into clean, readable, plain text format.
+
+    3. https://github.com/YUZU-Hub/appscreen --> creating beautiful App Store screenshots with customizable backgrounds, text overlays, and 3D device mockups.
+
+    4. https://github.com/cordiverse/cordis --> A Meta-Framework of Spatiotemporal Composability.
+
+    5. https://github.com/unslothai/unsloth -->  Unsloth is the first desktop app to run and train models.
+
+    6. https://github.com/OpenCut-app/OpenCut --> The open-source CapCut alternative
+
+    7. https://github.com/akitaonrails/ai-memory --> Solution for long term memory for agent coding CLIs and to facilitate handoff between different agent vendors
+
+    8. https://github.com/public-apis/public-apis --> A collective list of free APIs
+
+    9. https://github.com/ToolJet/ToolJet --> ToolJet is the open-source foundation of ToolJet AI - the enterprise app generation platform for building internal tools, dashboard, business applications, workflows and AI agents
+
+    10. https://github.com/makeplane/plane --> Open-source Jira, Linear, Monday, and ClickUp alternative. Plane is a modern project management platform to manage tasks, sprints, docs, and triage.
+
+    11. https://github.com/PostHog/posthog --> PostHog is the leading platform for building self-driving products. Our developer tools – AI observability, analytics, session replay, flags, experiments, error tracking, logs, and more – capture all the context agents need to diagnose problems, uncover opportunities, and ship fixes. Steer it all from Slack, web, desktop, or the MCP.
+
+    12. https://github.com/kgoedecke/doop --> The open-source alternative to Paper.design. A multiplayer design canvas where humans and AI agents design together, live. MCP built in.
+
+    13. https://github.com/frappe/erpnext --> Free and Open Source Enterprise Resource Planning (ERP)
+
+    14. https://github.com/twentyhq/twenty --> The open alternative to Salesforce, designed for AI.
+
+    15. https://github.com/jamiepine/voicebox --> The open-source AI voice studio. Clone, dictate, create.
+
+    16. https://github.com/unclecode/crawl4ai --> Crawl4AI: Open-source LLM Friendly Web Crawler & Scraper.
+
+    17. https://github.com/nocodb/nocodb --> A Free & Self-hostable Airtable Alternative
+
+    18. https://github.com/nexu-io/open-design --> Best DeepSeek Harness Design Plugin. The open-source Claude Design alternative. 🖥️ Local-first desktop app. 🖼️ Your coding agent becomes the design engine: prototypes, landing pages, dashboards, slides, images & video — real files, HTML/PDF/PPTX/MP4 export. 🤖 Claude Code / Codex / Cursor / DeepSeek Harness / OpenCode & 20+ CLIs via BYOK.
+
+    19. https://github.com/zfinix/another --> A desktop app for mirroring and controlling Android devices over USB. Built with Tauri, React, and Rust.
+
+    20. https://github.com/s1dashu/ip-as-logo-skill --> A compact Agent Skill for highly simplified, rounded, subtly neo-skeuomorphic IP mascot logos.
+
+    21. https://github.com/agalwood/motrix --> A modern, full-featured download manager that stays simple to use
+
+    22. https://github.com/0xGF/boneyard --> Auto generated skeleton loading framework
+
+    23. https://github.com/microsoft/omniparser --> A simple screen parsing tool towards pure vision based GUI agent
+
+    24. https://github.com/evoiz/Agentic-Design-Patterns --> Teaches How Agentic AIs are made
+
+    25. https://github.com/snapotter-hq/SnapOtter --> Open-source, self-hosted file-processing tool. Convert, compress, OCR, transcribe & run local AI across image, video, audio, PDF & documents, via UI, REST API & pipelines. Your files never leave your network.
+
+    26. https://github.com/lidge-jun/opencodex --> Universal provider proxy for OpenAI Codex & Claude Code — use any LLM (Claude, Gemini, Grok, DeepSeek, Ollama…) with Codex CLI, App, SDK, and Claude Code
+
+    27. https://github.com/Lakr233/vphone-cli --> Boot a virtual iPhone via Apple's Virtualization.framework using PCC research VM infrastructure.
+
+    28. https://github.com/SenteLabsAI/OpenExecutive --> An AI system that acts as your company's virtual executive team — a senior advisor with Harvard MBA-level knowledge, customized for your specific business.
+
+    29. https://github.com/duty1g/x64dbg-mcp-server --> x64dbg-MCP Server is a native MCP (Model Context Protocol) plugin for x64dbg that exposes the debugger's full functionality over HTTP. Connect any MCP-compatible AI assistant and control x64dbg programmatically: set breakpoints, step through code, read memory, dump registers, and more. Built with Zig — zero dependencies, single-binary output, cros
+
+    30. https://github.com/aandrew-me/ytDownloader --> Desktop app to download audio/video from hundreds of sites
+
+    31. https://github.com/chatwoot/chatwoot --> The modern customer support platform, an open-source alternative to Intercom, Zendesk, Salesforce Service Cloud etc.
+
+    32. https://github.com/nguyenphutrong/quotio --> Stop juggling AI accounts. Quotio is a beautiful native macOS menu bar app that unifies your Claude, Gemini, OpenAI, Qwen, and Antigravity subscriptions – with real-time quota tracking and smart auto-failover for AI coding tools like Claude Code, OpenCode, and Droid.
+
+    33. https://github.com/FlashML-org/FreeToken --> Unlock datacenter-class intelligence on the hardware you already own — Run 290B+ frontier MoE models locally on your gaming PC at blistering interactive speeds.
+
+    34. https://github.com/AlexsJones/llmfit --> Hundreds of models & providers. One command to find what runs on your hardware.
+
+    35. https://github.com/instaloader/instaloader --> Download pictures (or videos) along with their captions and other metadata from Instagram.
+
+    36. https://github.com/yt-dlp/yt-dlp --> A feature-rich command-line audio/video downloader
+
+    37. https://github.com/scrapy/scrapy --> Scrapy, a fast high-level web crawling & scraping framework for Python.
+
+    38. https://github.com/puppeteer/puppeteer --> Puppeteer is a JavaScript library which provides a high-level API to control Chrome or Firefox over the DevTools Protocol or WebDriver BiDi. Puppeteer runs in the headless (no visible UI) by default
+
+    39. https://github.com/medusajs/medusa --> Medusa is a commerce platform with a built-in framework for customization that allows you to build custom commerce applications without reinventing core commerce logic.
+
+    40. https://github.com/tryghost/ghost --> Independent technology for modern publishing, memberships, subscriptions and newsletters.
+
+    41. https://github.com/langchain-ai/langchain --> LangChain is a framework for building agents and LLM-powered applications. It helps you chain together interoperable components and third-party integrations to simplify AI application development — all while future-proofing decisions as the underlying technology evolves.
+
+    42. https://github.com/openobserve/openobserve --> Open source observability platform for logs, metrics, traces, frontend monitoring, pipelines and LLM observability. A sophisticated, simple and highly performant alternative to Datadog, Splunk, and Elasticsearch with 140x lower storage costs and single binary deployment.
+
+    43. https://github.com/dioxuslabs/dioxus --> Fullstack app framework for web, desktop, and mobile. (rust)
+
+    44. https://github.com/patchy631/ai-engineering-hub --> In-depth tutorials on LLMs, RAGs and real-world AI agent applications.
+
+    45. https://github.com/paymenter/paymenter --> Automate subscriptions, eliminate billing chaos, and grow your hosting business – without vendor lock-ins or hidden costs.
+
+    46. https://github.com/yifanfeng97/hyper-extract --> Hypergraph is more powerful. Transform unstructured text into structured knowledge with LLMs. Graphs, hypergraphs, and spatio-temporal extractions — with one command.
+
+    47. https://github.com/lfnovo/open-notebook --> An Open Source implementation of Notebook LM with more flexibility and features
+
+    48. https://github.com/MadsLorentzen/ai-job-search --> The job search that runs on your machine. AI job application framework built on Claude Code: evaluate postings, tailor CVs, write cover letters, prep interviews. Fork it and own it.
+
+    49. https://github.com/usestrix/strix --> Open-source AI penetration testing tool to find and fix your app’s vulnerabilities.
+
+    50. https://github.com/0x4m4/hexstrike-ai --> HexStrike AI MCP Agents is an advanced MCP server that lets AI agents (Claude, GPT, Copilot, etc.) autonomously run 150+ cybersecurity tools for automated pentesting, vulnerability discovery, bug bounty automation, and security research. Seamlessly bridge LLMs with real-world offensive security capabilities.
+
+    51. https://github.com/saifyxpro/HeadlessX --> The undetected self-hosted browser automation platform. Powered by Camoufox (Firefox) for 0% detection rates. Built for speed, privacy, and scalability.
+
+    52. https://github.com/firecrawl/firecrawl --> The context API to search, scrape, and interact with the web at scale.
+
+    53. https://github.com/unclecode/crawl4AI --> 🚀🤖 Crawl4AI: Open-source LLM Friendly Web Crawler & Scraper.
+
+    54. https://github.com/elixir-crawly/crawly --> Crawly, a high-level web crawling & scraping framework for Elixir.
+
+    55. https://github.com/secdev/scapy --> Scapy: the Python-based interactive packet manipulation program & library.
+
+    56. https://github.com/firecrawl/anydoc --> Convert Word, PowerPoint, Excel, OpenDocument, RTF, EPUB, CSV, and PDF to clean Markdown. Built in Rust, with Node.js and Python bindings.
+
+    57. https://github.com/666ghj/MiroFish --> A Simple and Universal Swarm Intelligence Engine, Predicting Anything.
+
+    58. https://github.com/ByteByteGoHq/system-design-101 --> Explain complex systems using visuals and simple terms. Help you prepare for system design interviews.
+
+    59. https://github.com/open-pencil/open-pencil --> AI-native design editor. Open-source Figma alternative.
+
+    60. https://github.com/Shubhamsaboo/awesome-llm-apps --> 100+ AI Agents, Agent Skills and RAG Apps - Free and Open Source.
+
+    61. https://github.com/goauthentik/authentik --> The authentication glue you need.
+
+    62. https://github.com/elder-plinius/OBLITERATUS --> OBLITERATE THE CHAINS THAT BIND YOU ( removes LLM censorship)
+
+    63. https://github.com/emilianavt/OpenSeeFace --> Robust realtime face and facial landmark tracking on CPU with Unity integration
+
+    64. https://github.com/EvoMap/evolver --> The GEP-powered self-evolving engine for AI agents. Auditable evolution with Genes, Capsules, and Events. | evomap.ai
+
+    65. https://github.com/tashfeenahmed/freellmapi --> 7.4 billion tokens per month. 34 free LLM providers. 635 free model endpoints. All behind one /v1 endpoint, plus any custom OpenAI-compatible endpoint. Smart routing, automatic failover, encrypted keys. Personal experimentation only.
+
+    66. https://github.com/trycompai/crm --> Comp AI CRM is an open source, CRM designed for AI agents. Agentic-first CRM.
+
+    67. https://github.com/NdoleStudio/httpsms --> Send and receive SMS messages using your Android phone programmatically via a simple HTTP API
+
+    68. https://github.com/calesthio/Crucix --> Your personal intelligence agent. Watches the world from multiple data sources and pings you when something changes.
+
+    69. https://github.com/fingerprintjs/fingerprintjs/ --> The most advanced free and open-source browser fingerprinting library
+
+    70. https://github.com/kittendevv/invio --> Self-hosted invoicing without the bloat.
+
+    71. https://github.com/antonreshetov/mysigmail --> A free and open-source email signature generator for Gmail, Outlook, Apple Mail, etc.
+
+    72. https://github.com/Netw0rkNoob/VulnClaw --> allows you to hack your website to find vulnerabilities
+
+Linux
+    1. https://github.com/basecamp/omarchy --> Omarchy is a beautiful, modern & opinionated Linux distribution by DHH.
+
+Skills
+    1. Scrollcraft --> allows your AI agent to make 3D websites
+
+    2. https://github.com/AgriciDaniel/claude-blog --> Claude Code blog skill suite: 30 sub-skills, 5 agents, 5-gate v1.9.0 Blog Delivery Contract, dual-optimized for Google rankings and AI citations. Active development at AI-Marketing-Hub/claude-blog (AI Marketing Hub Pro community); public releases ship here.
+
+    3. https://github.com/mattpocock/skills --> Skills for Real Engineers. Straight from my .agents directory.
+
+    4. https://github.com/anthropics/claude-code-security-review --> An AI-powered security review GitHub Action using Claude to analyze code changes for security vulnerabilities.
+
+    5. https://github.com/addyosmani/agent-skills --> comes with 24 different skills built by former AI Engineering director at GOOGLE
+
+    6. https://github.com/cathrynlavery/diagram-design --> 38 editorial diagram types for Claude Code, Codex, and Pi. Self-contained HTML + SVG. No shadows. No Mermaid slop.
+
+    7. https://github.com/BehiSecc/VibeSec-Skill --> This skill helps Claude write secure code and prevent common vulnerabilities.
+
+    8. https://github.com/dottxt-ai/outlines --> Structured Outputshttps://github.com/Netw0rkNoob/VulnClaw
+
+    9. https://github.com/TencentCloud/TencentDB-Agent-Memory --> TencentDB Agent Memory is a team-level memory hub for AI Agents — turning conversations, docs, and code into four reusable memory assets (Chat Memory, Skill, LLM-Wiki, Code-Graph) that are governed, shared, and equipped across agents and frameworks.
+
+    10. https://github.com/paperclipai/paperclip --> Paperclip is a Node.js server and React UI that orchestrates a team of AI agents to run a business. Bring your own agents, assign goals, and track work and costs from one dashboard.
+
+    11. algorithmic art
+
+    12. systemmatic debuggin
+
+    13. canvas design
+
+    14. theme factory
+
+    15. web artifacts builder
+
+    16. superpowers
+
+    17. file search
+
+    18. skill creator
+
+    19. https://github.com/oso95/scroll-world --> A skill that turn any brand into a scrollable 3D world landing page
+
+    20. https://github.com/petergyang/no-ai-slop --> Removes 20+ patterns of AI slop from any piece of writing.
+
+    21. github.com/ayghri/i-have-adhd --> A skill to stop your coding agent from burying the answer. ADHD-friendly output.
+
+    22. https://github.com/virgiliojr94/book-to-skill --> Turn any technical book PDF into a Claude Code skill — ready to study, reference, and use while you work.
+
+    23. https://github.com/diegosouzapw/OmniRoute --> Never stop coding. Free MIT AI gateway: one endpoint, 350 providers (90+ free), 1200+ models Kimi, Claude, GPT, Gemini, GLM, DeepSeek, MiniMax. Works with Claude Code, Codex, Cursor, OpenCode, Cline & Copilot. Quota-aware auto-fallback, RTK+Caveman compression saves 15-95% tokens, MCP/A2A, Desktop/PWA. Built by 450+ contributors
+
+    24. search console MCP
+
+    25. DataForSEO MCP
+
+    26. https://github.com/mykpono/ultimate-seo-geo --> The definitive SEO + GEO skill for Claude. Full site audits with scored findings, AI search optimization (Google AI Overviews, ChatGPT, Perplexity), schema generation, E-E-A-T assessment, and 20 diagnostic scripts. Three modes: Audit → Plan → Execute.
+
+    27. https://github.com/Cognitic-Labs/geoskills --> Open-source Agent Skills for GEO — 6 skills to diagnose, fix, and monitor AI visibility for your website. Works with Claude Code, OpenCode, OpenClaw, Codex, Cursor.
+
+    28. https://github.com/AgricIDaniel/claude-seo --> Universal SEO skill for Claude Code. 25 sub-skills + 18 sub-agents covering technical SEO, E-E-A-T, schema, GEO/AEO, backlinks, local SEO, maps intelligence, semantic clustering, e-commerce SEO, international SEO, Google APIs, and PDF/Excel reporting. Optional DataForSEO, Firecrawl, and Banana extensions.
+
+    29. the fable method
+
+    30. https://github.com/cloudflare/cloudflare-os --> Agent workspace built on Cloudflare Workers for creating documents, building apps, and running agents with your company’s context and systems.
+
+    31. https://github.com/xai-org/grok-build --> SpaceXAI's coding agent harness and TUI. Fullscreen, mouse interactive, extensible.
+
+Hacking
+    1. MAILACCESS --> Gives information realted to a email address
+
+Harness
+    1. https://github.com/deepseek-ai/deepseek-harness --> DeepSeek Harness: Everything is a Plugin.
+        a. to launch (npx @deepseek-ai/dsh web)
+
+Things to build
+    1. Your own lead tracker
+    2. a working portfolio piece
+    3. a pricing calculator
+    4. a proposal template
+    5. an outreach sequence
+    6. a simpole website or landing page
+    7. a referral request system
+    8. a content system for your own visibility
+    9. a basic financial tracker
+    10. a documented SOP for your actual process
+        A. if you can't explain how you work, you can't hand off or scale it later
+    11. when a user pays then a receipt prints in animation (https://www.instagram.com/reel/DcHnC0XIx-w/?igsi=NTRiOTQ5ZHg1dmNv)
+CI&CD pipelines (Means Developer pushed to github what needs to happen after)
+    1. CI tools like github action run automated checks
+        a. unit test
+        b. integration test
+        c. secutiry scans
+        d. code quality (all above using SomanQubee)
+    2. once everything is finished, a docker image is built (contains, code dependences and run time)
+    3. docker image is pushed to docker hub
+    4. that same image is used to run containers in stagging environment (stagging is like fake production)
+
+
+Youtube Videos to watch
+    1. https://www.youtube.com/watch?v=W4EwfEU8CGA --> let's handle 1 million requests per second
+    2. studied 2,108 dashboards to see what sticks
+    3. why great UI matter more than ever (by resend)
+    4. think like this and everything changes
+
+Things to avoid to make sure your website doesn't look VibeCoded
+    1. harsh Gradients
+    2. Lucide icons
+    3. Pure white backgrounds
+    4. rainbow coloring
+    5. drop shadows
+    6. 3 feature cards in a row
+    7. emojis
+    8. liquid glass
+    9. em dashes
+    10. inter/geist/space grotesk
+    11. colored left stripe
+    12. fake testimonials
+    13. bento grids
+    14. terminal window
+    15. "it's not x, it's y" --> anything that looks like This
+    16. checkmark bullets
+    17. 3 pricing tiers
+    18. no real product demos
+    19. soft corner radius
+    20. purple and black
+    21. no skeleton loader
+    22. radial orbs
+    23. dot grids
+    24. sparkle icons
+    25. animated arrows
+    26. no TOS
+    27. no privacy policy
+    28. hover animations for everything
+    29. neon colors
+    30. basic pastel colors
+
+5 core agentic design pattern to use for making enterprise grade agents
+    1. Tool use / function calling
+    2. reflection --> it should fix its own codes
+    3. plan & execution --> should be able to break down a large task into smaller tasks and plan and execute them accordingly
+    4. orchestrator / worker --> multi-agent
+    5. Memory and context management
+
+fixing 20 common things people forget while working with AI agents
+    1. One Root folder
+    2. brain folder
+    3. Claude.md
+    4. model routing
+    5. 5 context files --> meaning many context files
+    6. memory folder
+    7. index file
+    8. tool.md file
+    9. project folders
+    10. context files
+    11. obsidian
+    12. connect github
+    13. now.md
+    14. notion
+    15. rules.dm
+    16. skills folder
+    17. workflow folder
+    18. python scripts --> for repeat tasks to save token
+    19. .env
+    20. .gitignore
+
+How to find customers who need your Service
+    1. https://github.com/praw-dev/praw --> PRAW, an acronym for "Python Reddit API Wrapper", is a python package that allows for simple access to Reddit's API.
+    2. https://github.com/JustAnotherArchivist/snscrape --> snscrape is a scraper for social networking services (SNS). It scrapes things like user profiles, hashtags, or searches and returns the discovered items, e.g. the relevant posts.
+    3. https://github.com/spinlud/py-linkedin-jobs-scraper
+    4. github.com/gosom/google-maps-scraper --> scrape data from Google Maps. Extracts data such as the name, address, phone number, website URL, rating, reviews number, latitude and longitude, reviews,email and more for each place
+
+Things to add before launching
+    1. cutons 404 pages
+    2. CTA above the fold
+    3. internal links
+    4. thank you page after enquiry
+    5. breadcrumbs
+    6. case study section
+    7. 5 FAQ
+    8. response time promise
+    9. sticky mobile CTA
+    10. robots.txt
+    11. unique page titles
+    12. meta descriptions
+    13. social share img
+    14. maps + directions
+    15. real reviews
+    16. alt text on images
+    17. local schema
+    18. privacy policy page
+    19. google analytics
+    20.real photo of your team
+
+Open source AI projects developers should clone
+    1. https://github.com/open-webui/open-webui --> Open WebUI is an extensible, feature-rich, and user-friendly self-hosted AI platform designed to operate entirely offline. It supports various LLM runners like Ollama and OpenAI-compatible APIs, with built-in inference engine for RAG, making it a powerful AI deployment solution.
+
+    2. https://github.com/langgenius/dify --> Dify is an open-source LLM app development platform. Its intuitive interface combines AI workflow, RAG pipeline, agent capabilities, model management, observability features (including Opik, Langfuse, and Arize Phoenix) and more, letting you quickly go from prototype to production. Here's a list of the core features:
+
+    3. https://github.com/flowiseai/flowise --> Build AI Agents, Visually
+
+    4. https://github.com/infiniflow/ragflow --> RAGFlow is a leading open-source Retrieval-Augmented Generation (RAG) engine that fuses cutting-edge RAG with Agent capabilities to create a superior context layer for LLMs
+
+    5. https://github.com/mintplex-labs/anything-llm --> Stop renting your intelligence. Own it with AnythingLLM. Everything you need for a powerful local-first agent experience
+
+    6. https://github.com/OpenHands/openhands -->  The self-hosted developer control center for coding agents and automations.
+
+    7. https://github.com/langflow-ai/langflow --> Langflow is a powerful tool for building and deploying AI-powered agents and workflows.
+
+    8. https://github.com/danny-avila/librechat --> Enhanced ChatGPT Clone: Features Agents, MCP, Skills, DeepSeek, Anthropic, AWS, OpenAI, Responses API, Azure, Groq, o1, GPT-5, Mistral, OpenRouter, Vertex AI, Gemini, Artifacts, AI model switching, message search, Code Interpreter, langchain, DALL-E-3, OpenAPI Actions, Functions, Secure Multi-User Auth, Presets, open-source for self-hosting. Active
+
+    9. https://github.com/composiohq/composio --> Composio powers 1000+ toolkits, tool search, context management, authentication, and a sandboxed workbench to help you build AI agents that turn intent into action.
+
+    10, https://github.com/crewaiinc/crewai --> Framework for orchestrating role-playing, autonomous AI agents. By fostering collaborative intelligence, CrewAI empowers agents to work together seamlessly, tackling complex tasks.
+
+4 Design patterns your VibeCoded website should have
+    1. skeleton loaders
+    2. sementic colors
+    3. cluttered UI elements --> pointless extra description on things
+    4. checking for accessibility non-compliance
+
+How to make websites look stunning
+    1. Bento Grid UI
+    2. Bauhaus UI
+    3. Neomorphism UI
+    4. Swiss Design UI
+    5. Claymorphism UI
+    6. Glassmorphism UI
+    7. Editorial UI
+
+How not to get Sude after making something
+    1. legal --> if you are collecting any data you need to publish your privacy policy
+    2. security -> focus on OWASP
+    3. Secrets --> don't be an idiot and push .env to production
+    4. rate limits
+
+8 important .md files
+    1. PRD.MD
+    2. TECHSPEC.MD
+    3. APPFLOW.MD
+    4. DESIGN.MD
+    5. SCHEMA.MD
+    6. IMPLEMENTATIONPLAN.MD
+    7. TRACKER.MD
+    8. RULES.MD
+
+Caching layers
+    1. browser
+    2. CDN
+    3. REDIS
+    4. database (try not to use this as much as possible)
+
+UI Libs
+    1. https://github.com/darkroomengineering/lenis --> Smooth scroll as it should be
+    2. GSAP
+    3. https://github.com/tengbao/vanta --> Animated 3D backgrounds for your website
+    4. https://github.com/DavidHDev/react-bits --> An open source collection of animated, interactive & fully customizable React components for building memorable websites.
+
+Find out if gRPC is better than REST
