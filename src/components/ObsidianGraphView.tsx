@@ -59,7 +59,7 @@ export default function ObsidianGraphView({ tools }: ObsidianGraphViewProps) {
           id: domainId,
           name: tool.domain,
           type: 'domain',
-          val: 16,
+          val: 18,
           color: DOMAIN_COLORS[tool.domain] || '#94a3b8',
         });
       }
@@ -71,7 +71,7 @@ export default function ObsidianGraphView({ tools }: ObsidianGraphViewProps) {
           name: tool.subCapability,
           type: 'capability',
           domain: tool.domain,
-          val: 10,
+          val: 11,
           color: DOMAIN_COLORS[tool.domain] || '#94a3b8',
         });
 
@@ -111,6 +111,7 @@ export default function ObsidianGraphView({ tools }: ObsidianGraphViewProps) {
 
     const width = containerRef.current.clientWidth || 800;
     const height = Math.min(550, Math.max(350, window.innerHeight * 0.55));
+    const isMobile = window.innerWidth < 640;
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const createGraph = ForceGraph as any;
@@ -120,13 +121,14 @@ export default function ObsidianGraphView({ tools }: ObsidianGraphViewProps) {
       .backgroundColor('#0b0f17')
       .graphData(graphData)
       .linkColor(() => '#1e2638')
-      .linkWidth(1.5)
-      // Render colored circle node AND visible node label text
+      .linkWidth(1.2)
+      // Custom Node & Label Renderer with Font Cap to prevent mobile text overlap
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       .nodeCanvasObject((node: any, ctx: CanvasRenderingContext2D, globalScale: number) => {
         const label = node.name || '';
-        const fontSize = Math.max(10 / globalScale, 3);
-        const radius = Math.sqrt(node.val || 6) * 1.8;
+        // Cap font size between 3px and 12px relative to scale to prevent huge text overlap on mobile
+        const fontSize = Math.min(12, Math.max(9 / globalScale, 3));
+        const radius = Math.sqrt(node.val || 6) * 1.5;
 
         // Draw node circle
         ctx.beginPath();
@@ -137,15 +139,33 @@ export default function ObsidianGraphView({ tools }: ObsidianGraphViewProps) {
         ctx.lineWidth = 1 / globalScale;
         ctx.stroke();
 
-        // Draw text label
-        ctx.font = `${fontSize}px "JetBrains Mono", monospace`;
-        ctx.textAlign = 'left';
-        ctx.textBaseline = 'middle';
-        ctx.fillStyle = node.type === 'domain' ? '#ffffff' : '#cbd5e1';
-        ctx.fillText(label, node.x + radius + 3, node.y);
+        // On small mobile viewports, show domain/capability labels always, and tool labels when zoomed or on desktop
+        const shouldShowLabel = node.type !== 'tool' || globalScale >= 1.3 || !isMobile;
+
+        if (shouldShowLabel) {
+          ctx.font = `${fontSize}px "JetBrains Mono", monospace`;
+          ctx.textAlign = 'left';
+          ctx.textBaseline = 'middle';
+          ctx.fillStyle = node.type === 'domain' ? '#ffffff' : node.type === 'capability' ? '#cbd5e1' : '#94a3b8';
+
+          const displayLabel = isMobile && label.length > 18 ? label.slice(0, 16) + '..' : label;
+          ctx.fillText(displayLabel, node.x + radius + 3, node.y);
+        }
       })
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       .onNodeClick((node: any) => setSelectedNode(node as GraphNode));
+
+    // Increase node repulsion force to spread graph out cleanly
+    if (graph.d3Force('charge')) {
+      graph.d3Force('charge').strength(-140);
+    }
+
+    // Auto fit viewport after initialization
+    setTimeout(() => {
+      if (graphInstanceRef.current) {
+        graphInstanceRef.current.zoomToFit(400, isMobile ? 40 : 20);
+      }
+    }, 500);
 
     graphInstanceRef.current = graph;
 
@@ -169,7 +189,8 @@ export default function ObsidianGraphView({ tools }: ObsidianGraphViewProps) {
 
   const handleResetZoom = () => {
     if (graphInstanceRef.current) {
-      graphInstanceRef.current.zoomToFit(400, 30);
+      const isMobile = window.innerWidth < 640;
+      graphInstanceRef.current.zoomToFit(400, isMobile ? 40 : 20);
     }
   };
 
@@ -203,7 +224,7 @@ export default function ObsidianGraphView({ tools }: ObsidianGraphViewProps) {
 
           <button
             onClick={handleResetZoom}
-            className="px-3 py-1.5 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-mono transition-colors cursor-pointer"
+            className="px-3 py-1.5 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-mono transition-colors cursor-pointer active:scale-[0.98]"
           >
             Reset View
           </button>
