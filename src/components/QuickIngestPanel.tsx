@@ -1,8 +1,9 @@
 'use client';
 
 import React, { useState } from 'react';
+import { motion } from 'framer-motion';
 import { Tool, Domain } from '@/types';
-import { Plus, Sparkles, CheckCircle2, Link as LinkIcon, Star, Award } from 'lucide-react';
+import { Plus, Sparkles, CheckCircle2, Link as LinkIcon, Star, Tag, Layers } from 'lucide-react';
 import confetti from 'canvas-confetti';
 
 interface QuickIngestPanelProps {
@@ -28,7 +29,7 @@ export default function QuickIngestPanel({ onAddTool, onDone }: QuickIngestPanel
   const [subCapability, setSubCapability] = useState('');
   const [description, setDescription] = useState('');
   const [notes, setNotes] = useState('');
-  const [rating, setRating] = useState(9.0);
+  const [rating, setRating] = useState(9.5);
   const [tagsInput, setTagsInput] = useState('');
   const [isSuccess, setIsSuccess] = useState(false);
 
@@ -82,7 +83,7 @@ export default function QuickIngestPanel({ onAddTool, onDone }: QuickIngestPanel
     setIsSuccess(true);
 
     confetti({
-      particleCount: 40,
+      particleCount: 50,
       spread: 60,
       origin: { y: 0.5 },
       colors: ['#10b981', '#6366f1', '#8b5cf6', '#f59e0b'],
@@ -90,24 +91,29 @@ export default function QuickIngestPanel({ onAddTool, onDone }: QuickIngestPanel
 
     setTimeout(() => {
       onDone();
-    }, 1200);
+    }, 1100);
   };
 
   return (
-    <div className="glass-panel max-w-3xl mx-auto rounded-3xl p-6 md:p-10 border border-white/10 shadow-2xl space-y-6">
+    <motion.div
+      initial={{ opacity: 0, y: 15 }}
+      animate={{ opacity: 1, y: 0 }}
+      className="glass-panel max-w-3xl mx-auto rounded-3xl p-6 md:p-10 border border-white/10 shadow-2xl space-y-6 font-sans"
+    >
       <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-white/10 pb-5 gap-3">
         <div>
-          <h2 className="text-2xl font-extrabold text-white font-['Plus_Jakarta_Sans']">
-            Ingest New Skill / Tool Note
+          <h2 className="text-2xl font-black text-white font-['Plus_Jakarta_Sans'] flex items-center gap-2">
+            <Layers className="w-6 h-6 text-indigo-400" />
+            <span>Ingest Skill / Tool Note</span>
           </h2>
           <p className="text-xs text-gray-400 font-mono mt-1">
-            Store skill links or personal notes. Brain automatically categorizes sub-capabilities.
+            Index custom tools or personal notes into Brain's capability engine.
           </p>
         </div>
         <button
           type="button"
           onClick={handleAutoExtract}
-          className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-indigo-500/10 text-indigo-300 border border-indigo-500/30 text-xs font-semibold hover:bg-indigo-500/20 transition-all cursor-pointer self-start sm:self-auto"
+          className="cursor-pointer inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-indigo-500/10 text-indigo-300 border border-indigo-500/30 text-xs font-semibold hover:bg-indigo-500/20 transition-all self-start sm:self-auto active:scale-95"
         >
           <Sparkles className="w-4 h-4 text-indigo-400" />
           <span>Auto-Extract Tags</span>
@@ -127,7 +133,7 @@ export default function QuickIngestPanel({ onAddTool, onDone }: QuickIngestPanel
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               placeholder="e.g. Screaming Frog, Blader Humanizer..."
-              className="w-full bg-black/50 border border-white/15 rounded-2xl px-4 py-3 text-xs text-white placeholder-gray-500 focus:outline-none focus:border-indigo-500 font-sans shadow-inner"
+              className="w-full bg-black/60 border border-white/15 rounded-2xl px-4 py-3 text-xs text-white placeholder-gray-500 focus:outline-none focus:border-indigo-500 font-sans shadow-inner transition-all"
             />
           </div>
 
@@ -143,7 +149,7 @@ export default function QuickIngestPanel({ onAddTool, onDone }: QuickIngestPanel
                 value={url}
                 onChange={(e) => setUrl(e.target.value)}
                 placeholder="https://..."
-                className="w-full bg-black/50 border border-white/15 rounded-2xl pl-11 pr-4 py-3 text-xs text-white placeholder-gray-500 focus:outline-none focus:border-indigo-500 font-sans shadow-inner"
+                className="w-full bg-black/60 border border-white/15 rounded-2xl pl-11 pr-4 py-3 text-xs text-white placeholder-gray-500 focus:outline-none focus:border-indigo-500 font-sans shadow-inner transition-all"
               />
             </div>
           </div>
@@ -156,7 +162,7 @@ export default function QuickIngestPanel({ onAddTool, onDone }: QuickIngestPanel
             <select
               value={domain}
               onChange={(e) => setDomain(e.target.value as Domain)}
-              className="w-full bg-black/50 border border-white/15 rounded-2xl px-4 py-3 text-xs text-white focus:outline-none focus:border-indigo-500 font-sans cursor-pointer"
+              className="w-full bg-black/60 border border-white/15 rounded-2xl px-4 py-3 text-xs text-white focus:outline-none focus:border-indigo-500 font-sans cursor-pointer"
             >
               {DOMAIN_OPTIONS.map((d) => (
                 <option key={d} value={d} className="bg-gray-900 text-white">
@@ -177,7 +183,7 @@ export default function QuickIngestPanel({ onAddTool, onDone }: QuickIngestPanel
               value={subCapability}
               onChange={(e) => setSubCapability(e.target.value)}
               placeholder="e.g. AI Slop Deletion, Keyword Research..."
-              className="w-full bg-black/50 border border-white/15 rounded-2xl px-4 py-3 text-xs text-white placeholder-gray-500 focus:outline-none focus:border-indigo-500 font-sans shadow-inner"
+              className="w-full bg-black/60 border border-white/15 rounded-2xl px-4 py-3 text-xs text-white placeholder-gray-500 focus:outline-none focus:border-indigo-500 font-sans shadow-inner transition-all"
             />
           </div>
 
@@ -185,7 +191,10 @@ export default function QuickIngestPanel({ onAddTool, onDone }: QuickIngestPanel
           <div>
             <label className="block text-xs font-mono text-gray-300 mb-1.5 flex items-center justify-between">
               <span>Utility Rating</span>
-              <strong className="text-amber-400 font-bold">{rating}/10</strong>
+              <strong className="text-amber-400 font-bold flex items-center gap-1">
+                <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-400 inline" />
+                {rating}/10
+              </strong>
             </label>
             <input
               type="range"
@@ -207,7 +216,7 @@ export default function QuickIngestPanel({ onAddTool, onDone }: QuickIngestPanel
             value={description}
             onChange={(e) => setDescription(e.target.value)}
             placeholder="Brief summary of tool capabilities..."
-            className="w-full bg-black/50 border border-white/15 rounded-2xl px-4 py-3 text-xs text-white placeholder-gray-500 focus:outline-none focus:border-indigo-500 font-sans shadow-inner"
+            className="w-full bg-black/60 border border-white/15 rounded-2xl px-4 py-3 text-xs text-white placeholder-gray-500 focus:outline-none focus:border-indigo-500 font-sans shadow-inner transition-all"
           />
         </div>
 
@@ -221,7 +230,7 @@ export default function QuickIngestPanel({ onAddTool, onDone }: QuickIngestPanel
             value={notes}
             onChange={(e) => setNotes(e.target.value)}
             placeholder="e.g. Best for 100k+ URL site crawls, use when auditing redirect chains..."
-            className="w-full bg-black/50 border border-white/15 rounded-2xl px-4 py-3 text-xs text-white placeholder-gray-500 focus:outline-none focus:border-indigo-500 font-sans shadow-inner"
+            className="w-full bg-black/60 border border-white/15 rounded-2xl px-4 py-3 text-xs text-white placeholder-gray-500 focus:outline-none focus:border-indigo-500 font-sans shadow-inner transition-all"
           />
         </div>
 
@@ -235,7 +244,7 @@ export default function QuickIngestPanel({ onAddTool, onDone }: QuickIngestPanel
             value={tagsInput}
             onChange={(e) => setTagsInput(e.target.value)}
             placeholder="keywords, backlinks, technical-audit"
-            className="w-full bg-black/50 border border-white/15 rounded-2xl px-4 py-3 text-xs text-white placeholder-gray-500 focus:outline-none focus:border-indigo-500 font-sans shadow-inner"
+            className="w-full bg-black/60 border border-white/15 rounded-2xl px-4 py-3 text-xs text-white placeholder-gray-500 focus:outline-none focus:border-indigo-500 font-sans shadow-inner transition-all"
           />
         </div>
 
@@ -244,7 +253,7 @@ export default function QuickIngestPanel({ onAddTool, onDone }: QuickIngestPanel
           <button
             type="submit"
             disabled={isSuccess}
-            className="px-8 py-3.5 rounded-2xl bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 text-white font-semibold text-xs shadow-xl shadow-indigo-600/30 hover:opacity-95 active:scale-98 transition-all flex items-center gap-2 cursor-pointer"
+            className="cursor-pointer px-8 py-3.5 rounded-2xl bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 text-white font-bold text-xs shadow-xl shadow-indigo-600/30 hover:opacity-95 active:scale-95 transition-all flex items-center gap-2"
           >
             {isSuccess ? (
               <>
@@ -260,6 +269,6 @@ export default function QuickIngestPanel({ onAddTool, onDone }: QuickIngestPanel
           </button>
         </div>
       </form>
-    </div>
+    </motion.div>
   );
 }
