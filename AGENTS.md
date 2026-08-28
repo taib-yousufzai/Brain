@@ -8,7 +8,7 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
 
 <!-- END:nextjs-agent-rules -->
 
-# Global Project Skills & Standards
+# Global Installed Skills & Standards
 
 ## 🎨 Installed Skill: Emil Kowalski Design & UI Taste
 - **Reference**: `skills/emil-kowalski-design.md`
@@ -17,3 +17,17 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
   - High-density dark slate palette (`#0b0f17` background, `#131823` surface, `#1e2638` borders).
   - High typographic contrast with clean sans-serif headers and monospace metrics.
   - Zero non-deterministic loading spinners (use skeleton pulse loaders).
+
+## ✨ Installed Skill: Impeccable (Zero-Flaw Pixel Polish)
+- **Reference**: `skills/impeccable.md`
+- **Principles**:
+  - Zero-flaw layout alignment and pixel-perfect grid margins.
+  - High-contrast legibility exceeding WCAG AAA standards.
+  - 100% interactive state coverage (hover, active, focus, disabled).
+
+## 📐 Installed Skill: Frontend Design Systems
+- **Reference**: `skills/frontend-design.md`
+- **Principles**:
+  - Modular component architecture with strict TypeScript props interfaces.
+  - Responsive layout engineering (mobile card fallbacks, flex/grid systems).
+  - Consistent semantic color tokens and spatial rhythm.

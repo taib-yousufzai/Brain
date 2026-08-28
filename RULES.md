@@ -9,12 +9,18 @@
 
 ---
 
-## 2. Selected UI Aesthetic: Emil Kowalski Design & UI Taste
+## 2. Selected UI & Design System Skills
 
-* **Style Architecture (Emil Kowalski High-Density Slate Industrial)**:
-  * **Emil Kowalski Design Standard**: Snappy micro-interactions (150-200ms ease), high-density data layout grids, and strict typography contrast.
-  * **Slate Industrial Surface**: Deep dark background (`#0b0f17`), structured cards (`#131823`), and crisp 1px borders (`#1e2638`).
-  * **Skeleton Loading**: Integrated `skeleton-box` keyframe loaders matching component geometry to prevent layout shift.
+* **Emil Kowalski Design & UI Taste (`skills/emil-kowalski-design.md`)**:
+  * Snappy micro-interactions (150-200ms ease), high-density data layout grids, and strict typography contrast.
+  * Slate Industrial Surface: Deep dark background (`#0b0f17`), structured cards (`#131823`), and crisp 1px borders (`#1e2638`).
+  * Skeleton Loading: Integrated `skeleton-box` keyframe loaders matching component geometry to prevent layout shift.
+
+* **Impeccable Visual Quality (`skills/impeccable.md`)**:
+  * Zero-flaw layout alignment, strict AAA contrast standards, and 100% interactive state coverage.
+
+* **Frontend Design Architecture (`skills/frontend-design.md`)**:
+  * Modular component props, mobile-first responsive grid adaptation, and consistent design system tokens.
 
 ---
 
