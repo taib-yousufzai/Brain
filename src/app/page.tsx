@@ -6,6 +6,7 @@ import Header from '@/components/Header';
 import GodStackGeneratorPanel from '@/components/GodStackGeneratorPanel';
 import ToolLibraryPanel from '@/components/ToolLibraryPanel';
 import QuickIngestPanel from '@/components/QuickIngestPanel';
+import InstallPrompt from '@/components/InstallPrompt';
 import { getStoredTools, saveStoredTools } from '@/lib/storage';
 import { Tool } from '@/types';
 
@@ -23,6 +24,7 @@ export default function Home() {
   const [tools, setTools] = useState<Tool[]>([]);
   const [activeTab, setActiveTab] = useState<'generator' | 'graph' | 'library' | 'ingest'>('generator');
   const [isLoaded, setIsLoaded] = useState(false);
+  const [showInstallPrompt, setShowInstallPrompt] = useState(false);
 
   useEffect(() => {
     const loaded = getStoredTools();
@@ -59,6 +61,7 @@ export default function Home() {
         domainCount={domainCount}
         activeTab={activeTab}
         setActiveTab={setActiveTab}
+        onOpenInstall={() => setShowInstallPrompt(true)}
       />
 
       <div className="max-w-4xl mx-auto px-6">
@@ -82,6 +85,11 @@ export default function Home() {
           />
         )}
       </div>
+
+      <InstallPrompt
+        forceOpen={showInstallPrompt}
+        onCloseForceOpen={() => setShowInstallPrompt(false)}
+      />
     </main>
   );
 }

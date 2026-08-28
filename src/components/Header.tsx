@@ -1,21 +1,24 @@
 'use client';
 
 import React from 'react';
+import { Download } from 'lucide-react';
 
 interface HeaderProps {
   toolCount: number;
   domainCount: number;
   activeTab: 'generator' | 'graph' | 'library' | 'ingest';
   setActiveTab: (tab: 'generator' | 'graph' | 'library' | 'ingest') => void;
+  onOpenInstall?: () => void;
 }
 
 export default function Header({
   toolCount,
   activeTab,
   setActiveTab,
+  onOpenInstall,
 }: HeaderProps) {
   return (
-    <header className="sticky top-0 z-50 backdrop-blur-xl bg-[#06070a]/90 border-b border-white/10 mb-10">
+    <header className="sticky top-0 z-40 backdrop-blur-xl bg-[#06070a]/90 border-b border-white/10 mb-10">
       <div className="max-w-4xl mx-auto px-6 py-5 flex items-center justify-between">
         
         {/* Brand Logo - Swiss Minimalist */}
@@ -32,7 +35,7 @@ export default function Header({
         </div>
 
         {/* Minimalist Text Navigation */}
-        <nav className="flex items-center gap-6 text-xs font-mono">
+        <nav className="flex items-center gap-5 text-xs font-mono">
           <button
             onClick={() => setActiveTab('generator')}
             className={`transition-all duration-200 cursor-pointer ${
@@ -77,6 +80,16 @@ export default function Header({
           >
             Ingest
           </button>
+
+          {onOpenInstall && (
+            <button
+              onClick={onOpenInstall}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-indigo-600/20 hover:bg-indigo-600/30 border border-indigo-500/30 text-indigo-300 hover:text-white transition-all cursor-pointer font-sans font-semibold text-xs ml-1"
+            >
+              <Download className="w-3.5 h-3.5 text-indigo-400" />
+              <span>Install</span>
+            </button>
+          )}
         </nav>
       </div>
     </header>
