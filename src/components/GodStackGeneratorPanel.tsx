@@ -1,10 +1,8 @@
 'use client';
 
 import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
 import { Tool, GodStack } from '@/types';
 import { generateGodStack } from '@/lib/godStackEngine';
-import { ArrowRight, Copy, Check, ExternalLink, Award, ShieldCheck, Zap, Sparkles, Cpu, Layers, Flame } from 'lucide-react';
 import confetti from 'canvas-confetti';
 
 interface GodStackGeneratorPanelProps {
@@ -12,11 +10,11 @@ interface GodStackGeneratorPanelProps {
   onOpenLibrary: () => void;
 }
 
-const QUICK_CHIPS = [
-  { goal: 'SEO Audit Engine', icon: Sparkles, color: 'from-pink-500/20 to-purple-500/20 text-pink-300 border-pink-500/30' },
-  { goal: 'SaaS Product Launch', icon: Flame, color: 'from-amber-500/20 to-orange-500/20 text-amber-300 border-amber-500/30' },
-  { goal: 'AI Copy & Slop-Killer', icon: Cpu, color: 'from-emerald-500/20 to-teal-500/20 text-emerald-300 border-emerald-500/30' },
-  { goal: 'Full-Stack Dev System', icon: Layers, color: 'from-indigo-500/20 to-cyan-500/20 text-indigo-300 border-indigo-500/30' },
+const PRESET_WORKFLOWS = [
+  'SEO Technical Audit',
+  'SaaS Product Architecture',
+  'AI Copywriting & Filtering',
+  'Fullstack Web Application',
 ];
 
 export default function GodStackGeneratorPanel({ tools, onOpenLibrary }: GodStackGeneratorPanelProps) {
@@ -26,12 +24,10 @@ export default function GodStackGeneratorPanel({ tools, onOpenLibrary }: GodStac
   const [copied, setCopied] = useState(false);
 
   const capabilityCount = new Set(tools.map((t) => t.subCapability)).size;
-  const domainCount = new Set(tools.map((t) => t.domain)).size;
-  const topTierCount = tools.filter((t) => t.rating >= 9.8).length;
 
-  const handleRunWorkflow = (workflowGoal: string) => {
-    setGoal(workflowGoal);
-    executeAssembly(workflowGoal);
+  const handleRunPreset = (presetGoal: string) => {
+    setGoal(presetGoal);
+    executeAssembly(presetGoal);
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -42,6 +38,7 @@ export default function GodStackGeneratorPanel({ tools, onOpenLibrary }: GodStac
 
   const executeAssembly = (promptText: string) => {
     setIsGenerating(true);
+    setStack(null);
 
     setTimeout(() => {
       const result = generateGodStack(promptText, tools);
@@ -49,253 +46,178 @@ export default function GodStackGeneratorPanel({ tools, onOpenLibrary }: GodStac
       setIsGenerating(false);
 
       confetti({
-        particleCount: 50,
-        spread: 60,
+        particleCount: 30,
+        spread: 40,
         origin: { y: 0.5 },
-        colors: ['#6366f1', '#8b5cf6', '#10b981', '#f59e0b'],
+        colors: ['#3b82f6', '#10b981', '#64748b'],
       });
-    }, 450);
+    }, 500);
   };
 
   const handleCopyMarkdown = () => {
     if (!stack) return;
 
     let md = `# God Stack: ${stack.goal}\n\n`;
-    md += `*Assembled by Brain (Zero Redundancy Engine)*\n\n`;
+    md += `Assembled by Brain Capability Engine\n\n`;
 
     stack.slots.forEach((slot, idx) => {
-      md += `### ${idx + 1}. ${slot.subCapability}: **${slot.tool.title}** (${slot.tool.rating}/10)\n`;
-      md += `- **Domain**: ${slot.tool.domain}\n`;
-      md += `- **Description**: ${slot.tool.description}\n`;
-      if (slot.tool.url) md += `- **Link**: ${slot.tool.url}\n`;
-      md += `- **Why Selected**: ${slot.reasoning}\n\n`;
+      md += `### ${idx + 1}. ${slot.subCapability}: ${slot.tool.title} (${slot.tool.rating}/10)\n`;
+      md += `- Domain: ${slot.tool.domain}\n`;
+      md += `- Description: ${slot.tool.description}\n`;
+      if (slot.tool.url) md += `- Link: ${slot.tool.url}\n`;
+      md += `- Reasoning: ${slot.reasoning}\n\n`;
     });
 
     navigator.clipboard.writeText(md);
     setCopied(true);
-    setTimeout(() => setCopied(false), 2200);
+    setTimeout(() => setCopied(false), 2000);
   };
 
   return (
-    <div className="max-w-4xl mx-auto space-y-8 font-sans">
+    <div className="max-w-4xl mx-auto space-y-6 font-sans">
       
-      {/* Hero Header Banner */}
-      <div className="text-center space-y-4 pt-2 pb-2">
-        <motion.div
-          initial={{ opacity: 0, y: 15 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-indigo-500/10 border border-indigo-500/25 text-indigo-300 text-xs font-mono font-medium shadow-inner"
-        >
-          <Zap className="w-3.5 h-3.5 text-indigo-400 animate-bounce" />
-          <span>Zero-Redundancy Capability Engine</span>
-        </motion.div>
+      {/* Header Panel */}
+      <div className="bg-[#131823] border border-[#1e2638] p-6 rounded-lg space-y-4">
+        <div>
+          <h1 className="text-2xl font-bold text-white font-['Plus_Jakarta_Sans']">
+            God Stack Orchestrator
+          </h1>
+          <p className="text-xs text-slate-400 font-sans mt-1">
+            Construct deterministic workflows from indexed tool capabilities with zero redundancy.
+          </p>
+        </div>
 
-        <motion.h1
-          initial={{ opacity: 0, y: 15 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.1 }}
-          className="text-4xl sm:text-5xl font-black tracking-tight text-white font-['Plus_Jakarta_Sans'] leading-tight"
-        >
-          Assemble Your <span className="gradient-text-hero">God Stack</span>
-        </motion.h1>
-
-        <motion.p
-          initial={{ opacity: 0, y: 15 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.2 }}
-          className="text-sm sm:text-base text-gray-400 max-w-xl mx-auto font-sans leading-relaxed"
-        >
-          Specify your goal. Brain orchestrates your indexed tools into a non-redundant, maximum-power workflow.
-        </motion.p>
-      </div>
-
-      {/* Main Command Input Box */}
-      <motion.div
-        initial={{ opacity: 0, scale: 0.98 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 0.4, delay: 0.25 }}
-        className="glass-panel p-3 sm:p-4 rounded-3xl border border-indigo-500/30 shadow-[0_20px_50px_rgba(99,102,241,0.15)] relative overflow-hidden"
-      >
-        <form onSubmit={handleSubmit} className="flex items-center gap-3">
-          <div className="relative flex-1">
-            <input
-              type="text"
-              value={goal}
-              onChange={(e) => setGoal(e.target.value)}
-              placeholder="Enter workflow goal (e.g., SEO audit, SaaS launch, AI copy)..."
-              className="w-full bg-black/60 border border-white/10 rounded-2xl px-5 py-4 text-sm text-white placeholder-gray-500 focus:outline-none focus:border-indigo-500/80 font-sans shadow-inner transition-all"
-            />
-          </div>
+        {/* Input Form */}
+        <form onSubmit={handleSubmit} className="flex gap-2">
+          <input
+            type="text"
+            value={goal}
+            onChange={(e) => setGoal(e.target.value)}
+            placeholder="Enter workflow objective (e.g. SEO audit, SaaS launch)..."
+            className="flex-1 bg-[#0b0f17] border border-slate-700 rounded-md px-4 py-2.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-blue-500 font-sans"
+          />
 
           <button
             type="submit"
             disabled={isGenerating || !goal.trim()}
-            className="cursor-pointer px-6 py-4 rounded-2xl bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 hover:from-indigo-500 hover:to-pink-500 text-white font-bold text-xs transition-all shadow-lg shadow-indigo-600/30 flex items-center gap-2 shrink-0 disabled:opacity-40 active:scale-95"
+            className="px-5 py-2.5 bg-blue-600 hover:bg-blue-500 disabled:opacity-50 text-white font-mono font-medium text-xs rounded-md transition-colors cursor-pointer"
           >
-            {isGenerating ? (
-              <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-            ) : (
-              <>
-                <span>Orchestrate</span>
-                <ArrowRight className="w-4 h-4" />
-              </>
-            )}
+            {isGenerating ? 'Assembling...' : 'Assemble Stack'}
           </button>
         </form>
 
-        {/* Quick Action Preset Chips */}
-        <div className="mt-4 pt-3 border-t border-white/5 flex items-center gap-2 overflow-x-auto no-scrollbar">
-          <span className="text-[10px] font-mono text-gray-500 uppercase tracking-wider shrink-0">Preset:</span>
-          {QUICK_CHIPS.map((chip) => {
-            const Icon = chip.icon;
-            return (
-              <button
-                key={chip.goal}
-                onClick={() => handleRunWorkflow(chip.goal)}
-                className={`cursor-pointer px-3 py-1 rounded-xl text-xs font-mono flex items-center gap-1.5 bg-gradient-to-r ${chip.color} border transition-all hover:scale-105 shrink-0`}
-              >
-                <Icon className="w-3 h-3" />
-                <span>{chip.goal}</span>
-              </button>
-            );
-          })}
-        </div>
-      </motion.div>
-
-      {/* Live Index Stats Bar */}
-      <div
-        onClick={onOpenLibrary}
-        className="glass-panel p-5 rounded-2xl border border-white/10 flex flex-col sm:flex-row items-center justify-between gap-4 cursor-pointer group hover:border-indigo-500/40 transition-all"
-      >
-        <div className="flex items-center gap-6 text-xs font-mono">
-          <div>
-            <span className="text-gray-400">Indexed Tools</span>
-            <div className="text-lg font-bold text-white">{tools.length}</div>
-          </div>
-          <div className="w-px h-8 bg-white/10" />
-          <div>
-            <span className="text-gray-400">Capabilities</span>
-            <div className="text-lg font-bold text-cyan-300">{capabilityCount}</div>
-          </div>
-          <div className="w-px h-8 bg-white/10" />
-          <div>
-            <span className="text-gray-400">Top-Tier (10/10)</span>
-            <div className="text-lg font-bold text-amber-400">{topTierCount}</div>
-          </div>
-        </div>
-
-        <div className="text-xs font-mono text-indigo-400 group-hover:translate-x-1 transition-transform flex items-center gap-1">
-          <span>Explore Knowledge Base</span>
-          <ArrowRight className="w-3.5 h-3.5" />
+        {/* Preset Workflow Buttons */}
+        <div className="flex flex-wrap items-center gap-2 pt-2 border-t border-slate-800">
+          <span className="text-[11px] font-mono text-slate-500">Presets:</span>
+          {PRESET_WORKFLOWS.map((preset) => (
+            <button
+              key={preset}
+              onClick={() => handleRunPreset(preset)}
+              className="px-2.5 py-1 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-mono transition-colors cursor-pointer"
+            >
+              {preset}
+            </button>
+          ))}
         </div>
       </div>
 
-      {/* God Stack Assembly Results Output */}
-      <AnimatePresence>
-        {stack && (
-          <motion.div
-            initial={{ opacity: 0, y: 25 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            className="space-y-6 pt-4"
-          >
-            {/* Header Result Card */}
-            <div className="glass-panel p-6 rounded-3xl border border-emerald-500/30 bg-emerald-950/10 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-              <div>
-                <div className="flex items-center gap-2">
-                  <ShieldCheck className="w-6 h-6 text-emerald-400" />
-                  <h3 className="text-xl font-extrabold text-white font-['Plus_Jakarta_Sans']">
-                    Assembled God Stack
-                  </h3>
-                </div>
-                <p className="text-xs font-mono text-gray-300 mt-1">
-                  Goal: <strong className="text-white">{stack.goal}</strong> · {stack.slots.length} Unique Capability Slots ({stack.redundancyFiltered} Redundant Excluded)
-                </p>
-              </div>
+      {/* Overview Metadata Bar */}
+      <div 
+        onClick={onOpenLibrary}
+        className="bg-[#131823] border border-[#1e2638] p-4 rounded-lg flex items-center justify-between text-xs font-mono cursor-pointer hover:border-slate-700 transition-colors"
+      >
+        <div className="flex items-center gap-4 text-slate-300">
+          <span>Total Tools: <strong className="text-white">{tools.length}</strong></span>
+          <span className="text-slate-600">|</span>
+          <span>Unique Capabilities: <strong className="text-white">{capabilityCount}</strong></span>
+        </div>
+        <span className="text-blue-400 hover:underline">View Index &rarr;</span>
+      </div>
 
-              <button
-                onClick={handleCopyMarkdown}
-                className="cursor-pointer flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-white/10 hover:bg-white/20 border border-white/15 text-white text-xs font-mono transition-all shrink-0 active:scale-95"
+      {/* Skeleton Loading State (Rule 21: Skeleton Loader) */}
+      {isGenerating && (
+        <div className="bg-[#131823] border border-[#1e2638] p-6 rounded-lg space-y-4">
+          <div className="h-5 w-48 skeleton-box" />
+          <div className="space-y-3 pt-2">
+            <div className="h-20 w-full skeleton-box" />
+            <div className="h-20 w-full skeleton-box" />
+            <div className="h-20 w-full skeleton-box" />
+          </div>
+        </div>
+      )}
+
+      {/* Stack Results */}
+      {stack && !isGenerating && (
+        <div className="bg-[#131823] border border-[#1e2638] p-6 rounded-lg space-y-5">
+          
+          <div className="flex items-center justify-between border-b border-slate-800 pb-4">
+            <div>
+              <h2 className="text-lg font-bold text-white font-['Plus_Jakarta_Sans']">
+                Assembled Stack: {stack.goal}
+              </h2>
+              <p className="text-xs font-mono text-slate-400 mt-0.5">
+                {stack.slots.length} Capability Slots ({stack.redundancyFiltered} Redundant Excluded)
+              </p>
+            </div>
+
+            <button
+              onClick={handleCopyMarkdown}
+              className="px-3.5 py-1.5 rounded bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-mono transition-colors cursor-pointer"
+            >
+              {copied ? 'Copied to Clipboard' : 'Copy Markdown'}
+            </button>
+          </div>
+
+          <div className="space-y-3">
+            {stack.slots.map((slot, index) => (
+              <div
+                key={slot.tool.id}
+                className="bg-[#0b0f17] border border-slate-800 p-4 rounded-md space-y-2"
               >
-                {copied ? (
-                  <>
-                    <Check className="w-4 h-4 text-emerald-400" />
-                    <span className="text-emerald-300 font-semibold">Copied!</span>
-                  </>
-                ) : (
-                  <>
-                    <Copy className="w-4 h-4" />
-                    <span>Copy Markdown</span>
-                  </>
-                )}
-              </button>
-            </div>
+                <div className="flex items-center justify-between text-xs font-mono">
+                  <div className="flex items-center gap-2">
+                    <span className="px-2 py-0.5 rounded bg-blue-950 text-blue-300 border border-blue-800 font-semibold">
+                      Slot {index + 1}: {slot.subCapability}
+                    </span>
+                    <span className="text-slate-400">{slot.tool.domain}</span>
+                  </div>
 
-            {/* Slots Cards */}
-            <div className="space-y-4">
-              {stack.slots.map((slot, index) => {
-                const isTopTier = slot.tool.rating >= 9.8;
+                  <span className="text-amber-400 font-bold">
+                    Rating: {slot.tool.rating}/10
+                  </span>
+                </div>
 
-                return (
-                  <motion.div
-                    key={slot.tool.id}
-                    initial={{ opacity: 0, y: 15 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: index * 0.08 }}
-                    className={`p-6 rounded-3xl border transition-all ${
-                      isTopTier ? 'glass-panel-gold' : 'glass-panel'
-                    }`}
-                  >
-                    <div className="flex items-center justify-between mb-3">
-                      <div className="flex items-center gap-2">
-                        <span className="w-6 h-6 rounded-lg bg-indigo-500/20 text-indigo-300 flex items-center justify-center font-mono text-xs font-bold border border-indigo-500/30">
-                          {index + 1}
-                        </span>
-                        <span className="px-3 py-1 rounded-lg bg-cyan-500/10 border border-cyan-500/30 text-cyan-300 font-mono text-xs font-semibold">
-                          {slot.subCapability}
-                        </span>
-                      </div>
+                <div className="flex items-baseline justify-between pt-1">
+                  <h3 className="text-base font-bold text-white font-['Plus_Jakarta_Sans']">
+                    {slot.tool.title}
+                  </h3>
 
-                      <div className="flex items-center gap-1.5 px-3 py-1 rounded-lg bg-amber-500/10 border border-amber-500/30 text-amber-300 text-xs font-mono font-bold">
-                        <Award className="w-4 h-4 text-amber-400" />
-                        <span>{slot.tool.rating}/10</span>
-                      </div>
-                    </div>
+                  {slot.tool.url && (
+                    <a
+                      href={slot.tool.url}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="text-xs font-mono text-blue-400 hover:underline"
+                    >
+                      Visit Link &rarr;
+                    </a>
+                  )}
+                </div>
 
-                    <div className="flex items-baseline justify-between mb-2">
-                      <h4 className="text-lg font-extrabold text-white font-['Plus_Jakarta_Sans']">
-                        {slot.tool.title}
-                      </h4>
+                <p className="text-xs text-slate-300 leading-relaxed">
+                  {slot.tool.description}
+                </p>
 
-                      {slot.tool.url && (
-                        <a
-                          href={slot.tool.url}
-                          target="_blank"
-                          rel="noreferrer"
-                          className="text-xs font-mono text-indigo-400 hover:text-indigo-300 flex items-center gap-1 font-semibold"
-                        >
-                          <span>Open Link</span>
-                          <ExternalLink className="w-3.5 h-3.5" />
-                        </a>
-                      )}
-                    </div>
+                <div className="text-[11px] font-mono text-slate-400 bg-slate-900/60 p-2.5 rounded border border-slate-800">
+                  Selection Reason: {slot.reasoning}
+                </div>
+              </div>
+            ))}
+          </div>
 
-                    <p className="text-xs text-gray-300 mb-4 leading-relaxed font-sans">
-                      {slot.tool.description}
-                    </p>
+        </div>
+      )}
 
-                    <div className="text-[11px] font-mono text-gray-300 bg-black/50 p-3 rounded-xl border border-white/5 flex items-center gap-2">
-                      <Zap className="w-3.5 h-3.5 text-indigo-400 shrink-0" />
-                      <span>{slot.reasoning}</span>
-                    </div>
-                  </motion.div>
-                );
-              })}
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
     </div>
   );
 }

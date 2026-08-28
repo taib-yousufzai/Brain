@@ -1,393 +1,235 @@
 'use client';
 
-import React, { useEffect, useRef, useState } from 'react';
-import { Tool } from '@/types';
+import React, { useEffect, useRef, useState, useMemo } from 'react';
 import ForceGraph from 'force-graph';
-import { Sparkles, ExternalLink, Star, ZoomIn, ZoomOut, Maximize2 } from 'lucide-react';
+import { Tool, Domain } from '@/types';
 
 interface GraphNode {
   id: string;
   name: string;
-  type: 'domain' | 'tool';
-  domain: string;
+  type: 'tool' | 'capability' | 'domain';
+  domain?: Domain;
+  rating?: number;
   val: number;
   color: string;
-  tool?: Tool;
-  x?: number;
-  y?: number;
 }
 
 interface GraphLink {
   source: string;
   target: string;
-  color: string;
+  type: 'capability' | 'domain';
 }
-
-const DOMAIN_COLORS: Record<string, string> = {
-  SEO: '#ec4899', // Pink
-  Development: '#6366f1', // Indigo
-  Design: '#06b6d4', // Cyan
-  Marketing: '#f59e0b', // Amber
-  Copywriting: '#10b981', // Emerald
-  DevOps: '#8b5cf6', // Violet
-  'AI & Prompting': '#d946ef', // Magenta
-  Productivity: '#3b82f6', // Blue
-};
 
 interface ObsidianGraphViewProps {
   tools: Tool[];
 }
 
-export default function ObsidianGraphView({ tools }: ObsidianGraphViewProps) {
-  const containerRef = useRef<HTMLDivElement | null>(null);
-  const graphInstanceRef = useRef<any>(null);
+const DOMAIN_COLORS: Record<Domain, string> = {
+  SEO: '#3b82f6',
+  Development: '#10b981',
+  Design: '#f59e0b',
+  Marketing: '#ec4899',
+  Copywriting: '#8b5cf6',
+  DevOps: '#06b6d4',
+  'AI & Prompting': '#6366f1',
+  Productivity: '#64748b',
+};
 
-  const [selectedTool, setSelectedTool] = useState<Tool | null>(null);
-  const [filterDomain, setFilterDomain] = useState<string>('All');
-  const [hoveredNode, setHoveredNode] = useState<GraphNode | null>(null);
+export default function ObsidianGraphView({ tools }: ObsidianGraphViewProps) {
+  const containerRef = useRef<HTMLDivElement>(null);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const graphInstanceRef = useRef<any>(null);
+  const [selectedNode, setSelectedNode] = useState<GraphNode | null>(null);
+  const [filterDomain, setFilterDomain] = useState<Domain | 'All'>('All');
+
+  const graphData = useMemo(() => {
+    const nodesMap = new Map<string, GraphNode>();
+    const links: GraphLink[] = [];
+
+    const activeTools = filterDomain === 'All'
+      ? tools
+      : tools.filter((t) => t.domain === filterDomain);
+
+    activeTools.forEach((tool) => {
+      // Domain Node
+      const domainId = `domain-${tool.domain}`;
+      if (!nodesMap.has(domainId)) {
+        nodesMap.set(domainId, {
+          id: domainId,
+          name: tool.domain,
+          type: 'domain',
+          val: 18,
+          color: DOMAIN_COLORS[tool.domain] || '#94a3b8',
+        });
+      }
+
+      // Capability Node
+      const capId = `cap-${tool.domain}-${tool.subCapability}`;
+      if (!nodesMap.has(capId)) {
+        nodesMap.set(capId, {
+          id: capId,
+          name: tool.subCapability,
+          type: 'capability',
+          domain: tool.domain,
+          val: 10,
+          color: DOMAIN_COLORS[tool.domain] || '#94a3b8',
+        });
+
+        links.push({
+          source: capId,
+          target: domainId,
+          type: 'domain',
+        });
+      }
+
+      // Tool Node
+      const toolNodeId = tool.id;
+      nodesMap.set(toolNodeId, {
+        id: toolNodeId,
+        name: tool.title,
+        type: 'tool',
+        domain: tool.domain,
+        rating: tool.rating,
+        val: 6,
+        color: tool.rating >= 9.8 ? '#f59e0b' : DOMAIN_COLORS[tool.domain] || '#94a3b8',
+      });
+
+      links.push({
+        source: toolNodeId,
+        target: capId,
+        type: 'capability',
+      });
+    });
+
+    return {
+      nodes: Array.from(nodesMap.values()),
+      links,
+    };
+  }, [tools, filterDomain]);
 
   useEffect(() => {
     if (!containerRef.current) return;
 
-    // 1. Build Graph Dataset
-    const domainSet = new Set<string>();
-    tools.forEach((t) => domainSet.add(t.domain));
-    const domainList = Array.from(domainSet);
+    const width = containerRef.current.clientWidth || 800;
+    const height = 550;
 
-    const nodes: GraphNode[] = [];
-    const links: GraphLink[] = [];
-
-    // Add Domain Cluster Nodes
-    domainList.forEach((dName) => {
-      const color = DOMAIN_COLORS[dName] || '#6366f1';
-      nodes.push({
-        id: `domain-${dName}`,
-        name: dName,
-        type: 'domain',
-        domain: dName,
-        val: 32,
-        color,
-      });
-    });
-
-    // Add Tool Nodes & Edges
-    tools.forEach((tool) => {
-      const color = DOMAIN_COLORS[tool.domain] || '#a5b4fc';
-      const nodeId = `tool-${tool.id}`;
-      nodes.push({
-        id: nodeId,
-        name: tool.title,
-        type: 'tool',
-        domain: tool.domain,
-        val: tool.rating >= 9.8 ? 10 : 5,
-        color,
-        tool,
-      });
-
-      links.push({
-        source: `domain-${tool.domain}`,
-        target: nodeId,
-        color,
-      });
-    });
-
-    // Add inter-domain connective links to draw clusters closer together
-    for (let i = 0; i < domainList.length - 1; i++) {
-      links.push({
-        source: `domain-${domainList[i]}`,
-        target: `domain-${domainList[i + 1]}`,
-        color: 'rgba(255, 255, 255, 0.03)',
-      });
-    }
-
-    // Filter nodes if domain selected
-    const activeNodes = filterDomain === 'All'
-      ? nodes
-      : nodes.filter((n) => n.domain === filterDomain);
-    const activeNodeIds = new Set(activeNodes.map((n) => n.id));
-    const activeLinks = links.filter(
-      (l) => activeNodeIds.has(l.source as string) && activeNodeIds.has(l.target as string)
-    );
-
-    // 2. Initialize Force Graph Engine
-    const container = containerRef.current;
-    container.innerHTML = ''; // Clear container
-
-    const graph = (ForceGraph as any)()(container)
-      .graphData({ nodes: activeNodes, links: activeLinks })
-      .backgroundColor('#06070a')
-      .width(container.clientWidth)
-      .height(680)
-      .nodeId('id')
-      .nodeVal('val')
-      .nodeColor((node: any) => node.color)
-      .nodeLabel('')
-      .linkWidth(0.8)
-      .linkColor((link: any) => link.color || 'rgba(255, 255, 255, 0.1)')
-      .linkDirectionalParticles(1)
-      .linkDirectionalParticleWidth(1.8)
-      .linkDirectionalParticleSpeed(0.006)
-      .linkDirectionalParticleColor((link: any) => link.color)
-      .d3VelocityDecay(0.25)
-      .d3AlphaDecay(0.02)
-
-      // Custom Canvas Node Painting
-      .nodeCanvasObject((node: any, ctx: CanvasRenderingContext2D, globalScale: number) => {
-        const isDomain = node.type === 'domain';
-        const isHovered = hoveredNode?.id === node.id;
-        const isSelected = selectedTool?.id === node.tool?.id;
-
-        const radius = Math.max(2.5, Math.sqrt(node.val) * (isDomain ? 2.2 : 1.4));
-        const fontSize = isDomain ? 14 / globalScale : 8.5 / globalScale;
-
-        // Glowing Halo
-        if (isDomain || isHovered || isSelected) {
-          ctx.beginPath();
-          ctx.arc(node.x, node.y, radius + (isHovered ? 5 : 3), 0, 2 * Math.PI, false);
-          ctx.fillStyle = node.color + (isDomain ? '40' : '60');
-          ctx.fill();
-        }
-
-        // Node Circle Body
-        ctx.beginPath();
-        ctx.arc(node.x, node.y, radius, 0, 2 * Math.PI, false);
-        ctx.fillStyle = isDomain ? node.color : '#0f121d';
-        ctx.strokeStyle = isSelected ? '#ffffff' : node.color;
-        ctx.lineWidth = (isHovered || isSelected ? 2.2 : 1) / globalScale;
-        ctx.fill();
-        ctx.stroke();
-
-        // Text Labels (Always show domain labels & hovered/selected tools)
-        if (isDomain || globalScale > 1.1 || isHovered) {
-          ctx.font = `${isDomain ? 'bold' : 'normal'} ${fontSize}px "Plus Jakarta Sans", sans-serif`;
-          ctx.textAlign = 'center';
-          ctx.textBaseline = 'middle';
-          ctx.fillStyle = isDomain ? '#ffffff' : '#d1d5db';
-          ctx.fillText(node.name, node.x, node.y + radius + (isDomain ? 12 : 8) / globalScale);
-        }
-      })
-      .onNodeHover((node: any) => {
-        setHoveredNode(node || null);
-        container.style.cursor = node ? 'pointer' : 'default';
-      })
-      .onNodeClick((node: any) => {
-        if (node.tool) {
-          setSelectedTool(node.tool);
-          graph.centerAt(node.x, node.y, 600);
-          graph.zoom(2.8, 600);
-        }
-      });
-
-    // Tighten physics attraction forces to bring clusters closer
-    if (graph.d3Force('charge')) {
-      graph.d3Force('charge').strength(-45); // Tighter repulsion keeps clusters closer
-    }
-    if (graph.d3Force('link')) {
-      graph.d3Force('link').distance(40); // Tighter link distance
-    }
-
-    // Auto zoom closer to central graph
-    setTimeout(() => {
-      if (graphInstanceRef.current) {
-        graphInstanceRef.current.zoomToFit(500, 180); // Higher padding zooms closer to graph core
-      }
-    }, 450);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const createGraph = ForceGraph as any;
+    const graph = createGraph()(containerRef.current)
+      .width(width)
+      .height(height)
+      .backgroundColor('#0b0f17')
+      .graphData(graphData)
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      .nodeLabel((n: any) => `${(n as GraphNode).name} (${(n as GraphNode).type})`)
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      .nodeColor((n: any) => (n as GraphNode).color)
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      .nodeVal((n: any) => (n as GraphNode).val)
+      .linkColor(() => '#1e2638')
+      .linkWidth(1.5)
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      .onNodeClick((node: any) => setSelectedNode(node as GraphNode));
 
     graphInstanceRef.current = graph;
 
-    const handleResize = () => {
-      if (containerRef.current && graphInstanceRef.current) {
-        graphInstanceRef.current.width(containerRef.current.clientWidth);
-      }
-    };
-    window.addEventListener('resize', handleResize);
-
     return () => {
-      window.removeEventListener('resize', handleResize);
-      if (graphInstanceRef.current) {
-        graphInstanceRef.current._destructor();
+      if (containerRef.current) {
+        containerRef.current.innerHTML = '';
       }
     };
-  }, [tools, filterDomain]);
+  }, [graphData]);
 
-  const handleZoomIn = () => {
+  const handleResetZoom = () => {
     if (graphInstanceRef.current) {
-      graphInstanceRef.current.zoom(graphInstanceRef.current.zoom() * 1.4, 300);
-    }
-  };
-
-  const handleZoomOut = () => {
-    if (graphInstanceRef.current) {
-      graphInstanceRef.current.zoom(graphInstanceRef.current.zoom() / 1.4, 300);
-    }
-  };
-
-  const handleZoomToFit = () => {
-    if (graphInstanceRef.current) {
-      graphInstanceRef.current.zoomToFit(400, 180);
+      graphInstanceRef.current.zoomToFit(400, 30);
     }
   };
 
   return (
-    <div className="space-y-6 max-w-7xl mx-auto font-sans">
-      {/* Header Bar */}
-      <div className="flex flex-col md:flex-row items-center justify-between gap-4 p-5 rounded-2xl bg-white/[0.03] border border-white/10">
+    <div className="bg-[#131823] border border-[#1e2638] rounded-lg p-5 space-y-4 font-sans">
+      
+      {/* Controls Bar */}
+      <div className="flex flex-col md:flex-row items-center justify-between gap-4 border-b border-[#1e2638] pb-4">
         <div>
-          <div className="flex items-center gap-2">
-            <Sparkles className="w-5 h-5 text-indigo-400" />
-            <h2 className="text-xl font-bold text-white font-['Plus_Jakarta_Sans']">
-              Obsidian Knowledge Graph
-            </h2>
-          </div>
-          <p className="text-xs text-gray-400 font-mono mt-0.5">
-            {tools.length} active nodes indexed across {Object.keys(DOMAIN_COLORS).length} capability clusters
+          <h2 className="text-lg font-bold text-white font-['Plus_Jakarta_Sans']">
+            Force-Directed Knowledge Graph
+          </h2>
+          <p className="text-xs text-slate-400 font-mono mt-0.5">
+            Interactive topology mapping domains, capabilities, and individual tools.
           </p>
         </div>
 
-        {/* Filter & Camera Controls */}
         <div className="flex items-center gap-2">
           <select
             value={filterDomain}
-            onChange={(e) => setFilterDomain(e.target.value)}
-            className="bg-black/60 border border-white/20 rounded-xl px-3.5 py-2 text-xs text-white focus:outline-none focus:border-indigo-500 font-mono cursor-pointer"
+            onChange={(e) => setFilterDomain(e.target.value as Domain | 'All')}
+            className="bg-[#0b0f17] border border-slate-700 rounded px-3 py-1.5 text-xs text-white font-mono cursor-pointer"
           >
-            <option value="All">All Domains Cluster ({tools.length} nodes)</option>
-            {Object.keys(DOMAIN_COLORS).map((d) => {
-              const count = tools.filter((t) => t.domain === d).length;
-              return (
-                <option key={d} value={d} className="bg-gray-900 text-white">
-                  {d} Cluster ({count} nodes)
-                </option>
-              );
-            })}
+            <option value="All">All Domains</option>
+            {Object.keys(DOMAIN_COLORS).map((d) => (
+              <option key={d} value={d}>
+                {d}
+              </option>
+            ))}
           </select>
 
-          <div className="flex items-center gap-1 bg-black/40 border border-white/15 rounded-xl p-1">
-            <button
-              onClick={handleZoomIn}
-              className="p-1.5 rounded-lg text-gray-400 hover:text-white hover:bg-white/10 transition-colors"
-              title="Zoom In"
-            >
-              <ZoomIn className="w-4 h-4" />
-            </button>
-            <button
-              onClick={handleZoomOut}
-              className="p-1.5 rounded-lg text-gray-400 hover:text-white hover:bg-white/10 transition-colors"
-              title="Zoom Out"
-            >
-              <ZoomOut className="w-4 h-4" />
-            </button>
-            <button
-              onClick={handleZoomToFit}
-              className="p-1.5 rounded-lg text-gray-400 hover:text-white hover:bg-white/10 transition-colors"
-              title="Zoom To Fit"
-            >
-              <Maximize2 className="w-4 h-4" />
-            </button>
-          </div>
+          <button
+            onClick={handleResetZoom}
+            className="px-3 py-1.5 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-mono transition-colors cursor-pointer"
+          >
+            Reset View
+          </button>
         </div>
       </div>
 
-      {/* Graph Area & Inspector */}
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-        <div className="lg:col-span-3 rounded-2xl border border-white/10 bg-[#06070a] overflow-hidden relative min-h-[680px]">
-          <div ref={containerRef} className="w-full h-full block" />
+      {/* Canvas Viewport Container */}
+      <div className="relative min-h-[500px] h-[550px] bg-[#0b0f17] border border-[#1e2638] rounded overflow-hidden">
+        <div ref={containerRef} className="w-full h-full" />
 
-          {/* Floating Tooltip */}
-          {hoveredNode && (
-            <div className="absolute top-4 left-4 p-3 rounded-xl bg-black/90 backdrop-blur-md border border-white/20 text-xs font-mono shadow-2xl pointer-events-none space-y-1 z-10">
-              <div className="text-white font-bold flex items-center gap-2">
-                <span
-                  className="w-2.5 h-2.5 rounded-full inline-block"
-                  style={{ backgroundColor: hoveredNode.color }}
-                ></span>
-                <span>{hoveredNode.name}</span>
-              </div>
-              <div className="text-gray-400 text-[11px]">
-                Domain: <span className="text-indigo-300">{hoveredNode.domain}</span>
-              </div>
-              {hoveredNode.tool && (
-                <div className="text-amber-400 text-[11px] font-bold">
-                  Rating: {hoveredNode.tool.rating}/10
-                </div>
-              )}
-            </div>
-          )}
-        </div>
-
-        {/* Selected Tool Inspector Sidebar */}
-        <div className="lg:col-span-1 p-5 rounded-2xl bg-white/[0.03] border border-white/10 flex flex-col justify-between space-y-4">
-          <div>
-            <div className="text-[11px] font-mono text-gray-400 uppercase tracking-wider mb-2 flex items-center justify-between">
-              <span>Node Inspector</span>
-              {selectedTool && (
-                <span className="px-2 py-0.5 rounded-md bg-indigo-500/20 text-indigo-300 text-[10px]">
-                  {selectedTool.domain}
-                </span>
-              )}
+        {/* Selected Node Details Drawer */}
+        {selectedNode && (
+          <div className="absolute top-4 right-4 bg-[#131823] border border-[#1e2638] p-4 rounded max-w-xs text-xs font-mono space-y-2 text-slate-300 shadow-xl">
+            <div className="flex items-center justify-between border-b border-slate-800 pb-2">
+              <span className="font-bold text-white uppercase text-[10px]">
+                {selectedNode.type} Node
+              </span>
+              <button
+                onClick={() => setSelectedNode(null)}
+                className="text-slate-500 hover:text-white cursor-pointer"
+              >
+                x
+              </button>
             </div>
 
-            {selectedTool ? (
-              <div className="space-y-4 animate-in fade-in duration-200">
-                <div className="flex items-center justify-between">
-                  <h3 className="text-lg font-bold text-white font-['Plus_Jakarta_Sans']">
-                    {selectedTool.title}
-                  </h3>
-                  <div className="flex items-center gap-1 px-2 py-0.5 rounded-lg bg-amber-500/10 border border-amber-500/30 text-amber-300 text-xs font-mono font-bold">
-                    <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-400" />
-                    <span>{selectedTool.rating}/10</span>
-                  </div>
-                </div>
+            <div className="font-bold text-sm text-white">{selectedNode.name}</div>
 
-                <div className="text-xs text-cyan-300 font-mono">
-                  Sub-Capability: <strong>{selectedTool.subCapability}</strong>
-                </div>
-
-                <p className="text-xs text-gray-300 leading-relaxed font-sans">
-                  {selectedTool.description}
-                </p>
-
-                {selectedTool.notes && (
-                  <div className="p-3 rounded-xl bg-black/40 border border-white/5 text-[11px] text-gray-300 font-mono space-y-1">
-                    <div className="text-indigo-400 font-semibold">Notes / Source:</div>
-                    <div>{selectedTool.notes}</div>
-                  </div>
-                )}
-
-                <div className="flex flex-wrap gap-1 pt-1">
-                  {selectedTool.tags.map((tag) => (
-                    <span
-                      key={tag}
-                      className="text-[10px] font-mono text-gray-400 px-2 py-0.5 rounded-md bg-white/5"
-                    >
-                      #{tag}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            ) : (
-              <div className="py-20 text-center space-y-2">
-                <Sparkles className="w-8 h-8 text-gray-600 mx-auto" />
-                <p className="text-xs text-gray-400 font-mono">
-                  Click any node in the graph to inspect its details & link.
-                </p>
-              </div>
+            {selectedNode.domain && (
+              <div>Domain: <span className="text-blue-400">{selectedNode.domain}</span></div>
+            )}
+            {selectedNode.rating !== undefined && (
+              <div>Rating: <span className="text-amber-400">{selectedNode.rating}/10</span></div>
             )}
           </div>
+        )}
+      </div>
 
-          {selectedTool?.url && (
-            <a
-              href={selectedTool.url}
-              target="_blank"
-              rel="noreferrer"
-              className="w-full py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-semibold text-xs flex items-center justify-center gap-2 transition-all shadow-lg shadow-indigo-600/30 cursor-pointer"
-            >
-              <span>Visit Link</span>
-              <ExternalLink className="w-3.5 h-3.5" />
-            </a>
-          )}
+      {/* Graph Legend */}
+      <div className="flex flex-wrap items-center gap-4 text-xs font-mono text-slate-400 pt-2 border-t border-[#1e2638]">
+        <div className="flex items-center gap-1.5">
+          <span className="w-3 h-3 rounded-full bg-blue-500 inline-block" />
+          <span>Domain Node</span>
+        </div>
+        <div className="flex items-center gap-1.5">
+          <span className="w-2.5 h-2.5 rounded-full bg-slate-400 inline-block" />
+          <span>Sub-Capability</span>
+        </div>
+        <div className="flex items-center gap-1.5">
+          <span className="w-2 h-2 rounded-full bg-amber-400 inline-block" />
+          <span>Gold Tier Tool (9.8+)</span>
         </div>
       </div>
+
     </div>
   );
 }
