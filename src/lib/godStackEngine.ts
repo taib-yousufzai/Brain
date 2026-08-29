@@ -1,116 +1,106 @@
-import { Tool, GodStack, GodStackSlot, Domain } from '@/types';
+import { Tool, GodStack, GodStackSlot, NonRecommendationRationale, UserPreferences } from '@/types';
+import { decomposeGoal } from './goalDecomposition';
+import { searchToolsWithRelevanceGate, CandidateEvaluation } from './semanticCapabilityEngine';
 
-// Pre-defined workflow mappings for common user goals
-const DOMAIN_WORKFLOW_MAP: Record<string, { domain: Domain; capabilities: string[] }> = {
-  seo: {
-    domain: 'SEO',
-    capabilities: [
-      'Keyword Research',
-      'Backlink Analysis',
-      'Technical Audit',
-      'Content Optimization',
-      'Rank & Index Tracking',
-    ],
-  },
-  development: {
-    domain: 'Development',
-    capabilities: ['Fullstack Framework', 'Backend Database', 'Minimal Viable Diff & YAGNI Architecture', 'Root-Cause Auditing'],
-  },
-  web: {
-    domain: 'Development',
-    capabilities: ['Fullstack Framework', 'Backend Database', 'Minimal Viable Diff & YAGNI Architecture'],
-  },
-  design: {
-    domain: 'Design',
-    capabilities: ['UI/UX Design', 'Micro-Animations & Micro-Interactions', 'Color Palette Selection', 'Zero-Flaw Pixel Polish'],
-  },
-  marketing: {
-    domain: 'Marketing',
-    capabilities: ['High-Converting Positioning & Copy', 'Content Optimization'],
-  },
-  copywriting: {
-    domain: 'Copywriting',
-    capabilities: ['AI Slop Deletion & Natural Voice', 'High-Converting Positioning & Copy', 'Content Optimization'],
-  },
-};
+export function generateGodStack(
+  goalPrompt: string,
+  allTools: Tool[],
+  preferences?: UserPreferences
+): GodStack {
+  // 1. Goal Decomposition into Required Capability Slots
+  const decomposition = decomposeGoal(goalPrompt);
+  const { requiredSlots } = decomposition;
 
-export function generateGodStack(goalPrompt: string, allTools: Tool[]): GodStack {
-  const normalizedGoal = goalPrompt.toLowerCase().trim();
+  // Apply User Preferences
+  let filteredTools = [...allTools];
+  if (preferences) {
+    if (preferences.openSourceOnly) filteredTools = filteredTools.filter(t => t.isOpenSource);
+    if (preferences.selfHostedOnly) filteredTools = filteredTools.filter(t => t.isSelfHosted);
+    if (preferences.apiRequired) filteredTools = filteredTools.filter(t => t.hasApi);
+  }
+  if (filteredTools.length === 0) filteredTools = [...allTools];
 
-  // Find matching domain workflow or infer from query keywords
-  let matchedDomainKey = Object.keys(DOMAIN_WORKFLOW_MAP).find((key) =>
-    normalizedGoal.includes(key)
-  );
+  const selectedSlots: GodStackSlot[] = [];
+  const selectedTools = new Set<string>();
+  const nonRecommendations: NonRecommendationRationale[] = [];
+  const missingGaps: string[] = [];
+  const candidatesConsidered = new Set<string>();
 
-  let targetDomain: Domain | null = matchedDomainKey
-    ? DOMAIN_WORKFLOW_MAP[matchedDomainKey].domain
-    : null;
-
-  // Filter tools by target domain if detected, or evaluate all tools
-  let candidatePool = targetDomain
-    ? allTools.filter((t) => t.domain.toLowerCase() === targetDomain?.toLowerCase())
-    : allTools;
-
-  // If pool is small or query is specific (e.g., "slop", "copywriter", "bento", "canvas")
-  if (candidatePool.length === 0 || normalizedGoal.length > 2) {
-    const searchMatches = allTools.filter(
-      (t) =>
-        t.title.toLowerCase().includes(normalizedGoal) ||
-        t.description.toLowerCase().includes(normalizedGoal) ||
-        t.subCapability.toLowerCase().includes(normalizedGoal) ||
-        t.tags.some((tag) => tag.toLowerCase().includes(normalizedGoal))
+  // 2. Iterate through required capability slots
+  for (const slot of requiredSlots) {
+    // Candidate retrieval + Hard Relevance Gate (relevance >= 0.65, confidence >= 0.60, negativeEvidence = false)
+    const validCandidates: CandidateEvaluation[] = searchToolsWithRelevanceGate(
+      slot.capabilityName,
+      filteredTools,
+      0.65,
+      0.60
     );
 
-    if (searchMatches.length > 0) {
-      candidatePool = searchMatches;
+    validCandidates.forEach(c => candidatesConsidered.add(c.tool.id));
+
+    // 3. Abstention Check: If no candidate passes hard relevance gate, mark missing gap
+    if (validCandidates.length === 0) {
+      missingGaps.push(`${slot.capabilityName} (${slot.whyRequired})`);
+      continue;
     }
-  }
 
-  // Fallback to entire library if candidate pool empty
-  if (candidatePool.length === 0) {
-    candidatePool = allTools;
-  }
+    // Top valid candidate champion
+    const topCandidate = validCandidates[0];
+    const topTool = topCandidate.tool;
 
-  // Group candidate tools by sub-capability slot
-  const capabilityMap = new Map<string, Tool[]>();
-  for (const tool of candidatePool) {
-    const cap = tool.subCapability.trim();
-    if (!capabilityMap.has(cap)) {
-      capabilityMap.set(cap, []);
+    // 4. Multi-Capability Packing Check: Avoid adding duplicate tools if already selected in stack
+    if (selectedTools.has(topTool.id)) {
+      continue;
     }
-    capabilityMap.get(cap)!.push(tool);
-  }
 
-  const slots: GodStackSlot[] = [];
-  let totalCandidatesEvaluated = 0;
+    selectedTools.add(topTool.id);
 
-  // For EACH distinct sub-capability, select EXACTLY 1 winner (the highest rated tool)
-  capabilityMap.forEach((toolsInSlot, capName) => {
-    totalCandidatesEvaluated += toolsInSlot.length;
+    const providedCaps = topCandidate.matchedCapabilities.join(', ') || topTool.subCapability;
 
-    // Rank tools in this slot by rating (descending)
-    const sortedTools = [...toolsInSlot].sort((a, b) => b.rating - a.rating);
-    const winnerTool = sortedTools[0];
-
-    const countInSlot = sortedTools.length;
-    const reasoning =
-      countInSlot > 1
-        ? `Outperformed ${countInSlot - 1} competing tool(s) in '${capName}' with a top rating of ${winnerTool.rating}/10.`
-        : `Selected as the primary winner for '${capName}'.`;
-
-    slots.push({
-      subCapability: capName,
-      tool: winnerTool,
-      reasoning,
+    selectedSlots.push({
+      subCapability: slot.capabilityName,
+      tool: topTool,
+      reasoning: `Selected as primary champion for '${slot.capabilityName}' (${slot.whyRequired}). Capability Relevance: ${Math.round(topCandidate.capabilityRelevance * 100)}%, Quality Rating: ${topTool.rating}/10.`,
+      alternatives: validCandidates.slice(1, 3).map(c => c.tool),
     });
+
+    // 5. Excluded Redundant Tools Rationale
+    validCandidates.slice(1, 3).forEach(comp => {
+      const altTool = comp.tool;
+      if (!selectedTools.has(altTool.id)) {
+        nonRecommendations.push({
+          tool: altTool,
+          reason: `Both '${topTool.title}' and '${altTool.title}' provide valid coverage for '${slot.capabilityName}'. '${topTool.title}' provides stronger fit/rating (${topTool.rating}/10 vs ${altTool.rating}/10). Adding '${altTool.title}' creates unnecessary redundancy.`,
+          replacedBy: topTool.title,
+        });
+      }
+    });
+  }
+
+  // Deduplicate non-recommendations
+  const uniqueNonRecs: NonRecommendationRationale[] = [];
+  const seenNonRecIds = new Set<string>();
+  nonRecommendations.forEach(nr => {
+    if (!seenNonRecIds.has(nr.tool.id)) {
+      seenNonRecIds.add(nr.tool.id);
+      uniqueNonRecs.push(nr);
+    }
   });
 
-  // Calculate redundant tools excluded
-  const redundancyFiltered = Math.max(0, totalCandidatesEvaluated - slots.length);
+  const totalRequired = requiredSlots.length;
+  const fulfilledCount = totalRequired - missingGaps.length;
+  const coveragePercentage = totalRequired > 0
+    ? Math.round((fulfilledCount / Math.max(1, totalRequired)) * 100)
+    : 100;
 
   return {
     goal: goalPrompt,
-    slots,
-    redundancyFiltered,
+    slots: selectedSlots,
+    redundancyFiltered: Math.max(0, candidatesConsidered.size - selectedSlots.length),
+    coveragePercentage,
+    candidatesConsidered: candidatesConsidered.size,
+    resourcesSelected: selectedSlots.length,
+    nonRecommendations: uniqueNonRecs,
+    knowledgeGaps: missingGaps,
   };
 }

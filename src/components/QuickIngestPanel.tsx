@@ -2,233 +2,169 @@
 
 import React, { useState } from 'react';
 import { Tool, Domain } from '@/types';
-import confetti from 'canvas-confetti';
 
 interface QuickIngestPanelProps {
   onAddTool: (tool: Tool) => void;
   onDone: () => void;
+  recentTools?: Tool[];
 }
 
-const DOMAIN_OPTIONS: Domain[] = [
-  'SEO',
-  'Development',
-  'Design',
-  'Marketing',
-  'Copywriting',
-  'DevOps',
-  'AI & Prompting',
-  'Productivity',
-];
-
-export default function QuickIngestPanel({ onAddTool, onDone }: QuickIngestPanelProps) {
-  const [title, setTitle] = useState('');
-  const [url, setUrl] = useState('');
-  const [domain, setDomain] = useState<Domain>('SEO');
-  const [subCapability, setSubCapability] = useState('');
-  const [description, setDescription] = useState('');
-  const [notes, setNotes] = useState('');
-  const [rating, setRating] = useState(9.5);
-  const [tagsInput, setTagsInput] = useState('');
+export default function QuickIngestPanel({ onAddTool, onDone, recentTools = [] }: QuickIngestPanelProps) {
+  const [rawDump, setRawDump] = useState('');
   const [isSuccess, setIsSuccess] = useState(false);
 
-  const handleAutoExtract = () => {
-    if (!title.trim() && !url.trim()) return;
-    const lower = (title + ' ' + url + ' ' + description).toLowerCase();
-
-    if (lower.includes('seo') || lower.includes('keyword') || lower.includes('backlink')) {
-      setDomain('SEO');
-      if (lower.includes('keyword')) setSubCapability('Keyword Research');
-      else if (lower.includes('backlink')) setSubCapability('Backlink Analysis');
-      else setSubCapability('Technical Audit');
-    } else if (lower.includes('copy') || lower.includes('human') || lower.includes('write')) {
-      setDomain('Copywriting');
-      setSubCapability('AI Slop Deletion');
-    } else if (lower.includes('react') || lower.includes('next') || lower.includes('code')) {
-      setDomain('Development');
-      setSubCapability('Fullstack Framework');
-    }
-
-    if (!tagsInput) {
-      setTagsInput('useful, core-stack');
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    if ((e.metaKey || e.ctrlKey) && e.key === 'Enter') {
+      e.preventDefault();
+      executeDump();
     }
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!title.trim() || !subCapability.trim()) return;
+  const executeDump = () => {
+    if (!rawDump.trim()) return;
+
+    const text = rawDump.trim();
+    let url: string | undefined = undefined;
+    let title = text.slice(0, 40);
+    let domain: Domain = 'Development';
+    let subCapability = 'General Capability';
+
+    // Auto extract URL
+    const urlMatch = text.match(/https?:\/\/[^\s]+/i);
+    if (urlMatch) {
+      url = urlMatch[0];
+    }
+
+    // Auto title extraction
+    if (text.includes('github.com/')) {
+      const parts = text.split('/');
+      const repoName = parts[parts.length - 1] || parts[parts.length - 2];
+      if (repoName) title = repoName.replace(/[^a-zA-Z0-9_-]/g, '');
+    } else {
+      title = text.split('\n')[0].slice(0, 50);
+    }
+
+    // Auto domain classification
+    const lower = text.toLowerCase();
+    if (lower.includes('seo') || lower.includes('crawl') || lower.includes('keyword') || lower.includes('backlink')) {
+      domain = 'SEO';
+      subCapability = lower.includes('crawl') ? 'Web Crawling & Extraction' : 'SEO Audit & Keyword Research';
+    } else if (lower.includes('ai') || lower.includes('agent') || lower.includes('mcp') || lower.includes('prompt')) {
+      domain = 'AI & Prompting';
+      subCapability = 'AI Agent & Tool Harness';
+    } else if (lower.includes('design') || lower.includes('ui') || lower.includes('css')) {
+      domain = 'Design';
+      subCapability = 'UI/UX Canvas & Styling';
+    } else if (lower.includes('copy') || lower.includes('write')) {
+      domain = 'Copywriting';
+      subCapability = 'Content Strategy';
+    }
 
     const newTool: Tool = {
-      id: 'tool-' + Date.now(),
-      title: title.trim(),
-      url: url.trim() || undefined,
-      description: description.trim() || 'No description provided.',
+      id: 'dump-' + Date.now(),
+      title: title || 'Untitled Dump',
+      url,
+      description: text,
       domain,
-      subCapability: subCapability.trim(),
-      rating: Number(rating),
-      notes: notes.trim() || undefined,
-      tags: tagsInput
-        .split(',')
-        .map((t) => t.trim().toLowerCase())
-        .filter(Boolean),
+      subCapability,
+      rating: 9.0,
+      tags: ['raw-dump', 'inbox'],
+      isOpenSource: true,
+      hasApi: true,
+      rawInput: text,
       createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+      sourceOrigin: 'dump_inbox',
     };
 
     onAddTool(newTool);
     setIsSuccess(true);
-
-    confetti({
-      particleCount: 30,
-      spread: 40,
-      origin: { y: 0.5 },
-      colors: ['#3b82f6', '#10b981'],
-    });
+    setRawDump('');
 
     setTimeout(() => {
+      setIsSuccess(false);
       onDone();
-    }, 900);
+    }, 800);
   };
 
+  const dumpsList = recentTools.slice(0, 5);
+
   return (
-    <div className="bg-[#131823] border border-[#1e2638] max-w-2xl mx-auto rounded-lg p-6 space-y-6 font-sans">
-      <div className="flex items-center justify-between border-b border-[#1e2638] pb-4">
+    <div className="max-w-2xl mx-auto space-y-8 font-sans pt-4 pb-12">
+      
+      {/* 1. DUMP HEADER & SINGLE INPUT BOX */}
+      <div className="space-y-4">
         <div>
-          <h2 className="text-xl font-bold text-white font-['Plus_Jakarta_Sans']">
-            Ingest Tool & Capability Note
-          </h2>
-          <p className="text-xs text-slate-400 font-mono mt-0.5">
-            Index custom tools or capabilities into Brain's deterministic workflow engine.
+          <h1 className="text-xl sm:text-2xl font-bold text-white tracking-tight font-sans">
+            DUMP INTO YOUR BRAIN
+          </h1>
+          <p className="text-xs text-slate-400 font-mono mt-1">
+            Paste anything. The system will figure out what it is.
           </p>
         </div>
 
-        <button
-          type="button"
-          onClick={handleAutoExtract}
-          className="px-3 py-1.5 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-mono transition-colors cursor-pointer"
-        >
-          Auto Tag
-        </button>
+        {/* Single Paste Textarea Box */}
+        <div className="space-y-3">
+          <textarea
+            rows={5}
+            value={rawDump}
+            onChange={(e) => setRawDump(e.target.value)}
+            onKeyDown={handleKeyDown}
+            placeholder="Paste URL, note, thought, tool, skill, GitHub repo, or anything else..."
+            className="w-full bg-[#12141c] border border-[#1e2230] hover:border-slate-700 rounded-lg p-4 text-xs sm:text-sm text-slate-100 placeholder-slate-500 focus:outline-none focus:border-blue-500 font-mono leading-relaxed transition-colors shadow-inner"
+          />
+
+          <div className="flex items-center justify-between font-mono text-xs">
+            <span className="text-[11px] text-slate-500">
+              Press <kbd className="px-1.5 py-0.5 bg-[#161a26] border border-[#1e2230] rounded text-slate-400">⌘↵</kbd> to dump
+            </span>
+
+            <button
+              onClick={executeDump}
+              disabled={!rawDump.trim() || isSuccess}
+              className="px-5 py-2 bg-blue-600 hover:bg-blue-500 disabled:opacity-40 text-white font-semibold rounded transition-colors cursor-pointer"
+            >
+              {isSuccess ? 'Dumped ✓' : 'Dump'}
+            </button>
+          </div>
+        </div>
       </div>
 
-      <form onSubmit={handleSubmit} className="space-y-4 text-xs font-sans">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div>
-            <label className="block font-mono text-slate-300 mb-1">
-              Tool Name *
-            </label>
-            <input
-              type="text"
-              required
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
-              placeholder="e.g. Screaming Frog"
-              className="w-full bg-[#0b0f17] border border-slate-700 rounded-md px-3 py-2 text-white placeholder-slate-500 focus:outline-none focus:border-blue-500"
-            />
+      <div className="border-t border-[#161a26]" />
+
+      {/* 2. RECENT DUMPS LIST */}
+      <div className="space-y-3">
+        <div className="flex items-center justify-between font-mono text-xs">
+          <h2 className="font-bold text-slate-300 uppercase tracking-wider text-[11px]">
+            Recent Dumps
+          </h2>
+          <span className="text-slate-500 text-[11px]">Last 5 items</span>
+        </div>
+
+        {dumpsList.length === 0 ? (
+          <div className="p-4 text-center text-xs font-mono text-slate-500 bg-[#12141c] border border-[#1e2230] rounded-lg">
+            No recent dumps. Paste anything above to add to your brain.
           </div>
-
-          <div>
-            <label className="block font-mono text-slate-300 mb-1">
-              URL (Optional)
-            </label>
-            <input
-              type="url"
-              value={url}
-              onChange={(e) => setUrl(e.target.value)}
-              placeholder="https://..."
-              className="w-full bg-[#0b0f17] border border-slate-700 rounded-md px-3 py-2 text-white placeholder-slate-500 focus:outline-none focus:border-blue-500"
-            />
+        ) : (
+          <div className="space-y-2 font-mono text-xs">
+            {dumpsList.map((tool) => (
+              <div
+                key={tool.id}
+                className="p-3 rounded bg-[#12141c] border border-[#1e2230] space-y-1"
+              >
+                <div className="flex items-center justify-between">
+                  <span className="font-bold text-slate-200">{tool.title}</span>
+                  <span className="text-[10px] text-slate-500">{tool.domain}</span>
+                </div>
+                <p className="text-[11px] text-slate-400 font-sans line-clamp-2">
+                  {tool.description}
+                </p>
+              </div>
+            ))}
           </div>
-        </div>
+        )}
+      </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div>
-            <label className="block font-mono text-slate-300 mb-1">Domain *</label>
-            <select
-              value={domain}
-              onChange={(e) => setDomain(e.target.value as Domain)}
-              className="w-full bg-[#0b0f17] border border-slate-700 rounded-md px-3 py-2 text-white focus:outline-none focus:border-blue-500 cursor-pointer"
-            >
-              {DOMAIN_OPTIONS.map((d) => (
-                <option key={d} value={d} className="bg-slate-900 text-white">
-                  {d}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          <div>
-            <label className="block font-mono text-slate-300 mb-1">
-              Sub-Capability Slot *
-            </label>
-            <input
-              type="text"
-              required
-              value={subCapability}
-              onChange={(e) => setSubCapability(e.target.value)}
-              placeholder="e.g. Keyword Research"
-              className="w-full bg-[#0b0f17] border border-slate-700 rounded-md px-3 py-2 text-white placeholder-slate-500 focus:outline-none focus:border-blue-500"
-            />
-          </div>
-
-          <div>
-            <label className="block font-mono text-slate-300 mb-1 flex items-center justify-between">
-              <span>Utility Rating</span>
-              <span className="text-amber-400 font-bold">{rating}/10</span>
-            </label>
-            <input
-              type="range"
-              min="1"
-              max="10"
-              step="0.1"
-              value={rating}
-              onChange={(e) => setRating(parseFloat(e.target.value))}
-              className="w-full accent-blue-500 mt-2 cursor-pointer"
-            />
-          </div>
-        </div>
-
-        <div>
-          <label className="block font-mono text-slate-300 mb-1">Description</label>
-          <textarea
-            rows={2}
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-            placeholder="Brief summary of capabilities..."
-            className="w-full bg-[#0b0f17] border border-slate-700 rounded-md px-3 py-2 text-white placeholder-slate-500 focus:outline-none focus:border-blue-500"
-          />
-        </div>
-
-        <div>
-          <label className="block font-mono text-slate-300 mb-1">Personal Notes</label>
-          <textarea
-            rows={2}
-            value={notes}
-            onChange={(e) => setNotes(e.target.value)}
-            placeholder="Best practices and use cases..."
-            className="w-full bg-[#0b0f17] border border-slate-700 rounded-md px-3 py-2 text-white placeholder-slate-500 focus:outline-none focus:border-blue-500"
-          />
-        </div>
-
-        <div>
-          <label className="block font-mono text-slate-300 mb-1">Tags (comma-separated)</label>
-          <input
-            type="text"
-            value={tagsInput}
-            onChange={(e) => setTagsInput(e.target.value)}
-            placeholder="seo, crawling, audit"
-            className="w-full bg-[#0b0f17] border border-slate-700 rounded-md px-3 py-2 text-white placeholder-slate-500 focus:outline-none focus:border-blue-500"
-          />
-        </div>
-
-        <div className="pt-2 flex justify-end">
-          <button
-            type="submit"
-            disabled={isSuccess}
-            className="px-6 py-2.5 bg-blue-600 hover:bg-blue-500 text-white font-mono font-medium text-xs rounded-md transition-colors cursor-pointer"
-          >
-            {isSuccess ? 'Saved to Index' : 'Save Tool'}
-          </button>
-        </div>
-      </form>
     </div>
   );
 }

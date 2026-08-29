@@ -55,14 +55,14 @@ export default function ToolLibraryPanel({ tools, onDeleteTool }: ToolLibraryPan
     <div className="max-w-6xl mx-auto space-y-4 sm:space-y-6 font-sans">
       
       {/* Search & Domain Filter Control Bar */}
-      <div className="bg-[#131823] border border-[#1e2638] p-4 sm:p-5 rounded-lg space-y-3 sm:space-y-4">
+      <div className="bg-[#12141c] border border-[#1e2230] p-4 sm:p-5 rounded-lg space-y-3 sm:space-y-4">
         <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
           <input
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Filter tools by keyword, slot, or domain..."
-            className="w-full sm:w-80 md:w-96 bg-[#0b0f17] border border-slate-700 rounded-md px-3.5 py-2 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-blue-500 font-sans"
+            className="w-full sm:w-80 md:w-96 bg-[#090a0f] border border-[#1e2230] rounded px-3.5 py-2 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-blue-500 font-sans"
           />
 
           <div className="text-xs font-mono text-slate-400 self-end sm:self-auto">

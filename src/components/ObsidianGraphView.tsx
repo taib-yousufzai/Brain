@@ -35,6 +35,7 @@ const DOMAIN_COLORS: Record<Domain, string> = {
   DevOps: '#06b6d4',
   'AI & Prompting': '#6366f1',
   Productivity: '#64748b',
+  General: '#94a3b8',
 };
 
 export default function ObsidianGraphView({ tools }: ObsidianGraphViewProps) {
@@ -114,14 +115,13 @@ export default function ObsidianGraphView({ tools }: ObsidianGraphViewProps) {
     const height = Math.min(550, Math.max(350, window.innerHeight * 0.55));
     const isMobile = window.innerWidth < 640;
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const createGraph = ForceGraph as any;
     const graph = createGraph()(containerRef.current)
       .width(width)
       .height(height)
-      .backgroundColor('#0b0f17')
+      .backgroundColor('#090a0f')
       .graphData(graphData)
-      .linkColor(() => '#1e2638')
+      .linkColor(() => '#1e2230')
       .linkWidth(1.2)
       // Custom Node & Label Renderer with Font Cap + Search Highlight
       // eslint-disable-next-line @typescript-eslint/no-explicit-any

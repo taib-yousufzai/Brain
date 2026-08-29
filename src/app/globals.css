@@ -2,73 +2,86 @@
 
 @layer base {
   :root {
-    --bg-main: #0b0f17;
-    --bg-card: #131823;
-    --bg-card-hover: #182030;
-    --border-color: #1e2638;
-    --border-accent: #3b82f6;
+    --bg-main: #090a0f;
+    --bg-sidebar: #0d0f17;
+    --bg-surface: #12141c;
+    --bg-surface-hover: #171b26;
+    --border-color: #1e2230;
+    --border-subtle: #161a26;
+    --accent-primary: #2563eb;
+    --accent-hover: #1d4ed8;
 
-    --font-display: 'Plus Jakarta Sans', system-ui, sans-serif;
-    --font-body: 'Roboto', system-ui, sans-serif;
+    --font-sans: 'Inter', 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
     --font-mono: 'JetBrains Mono', monospace;
   }
 
   body {
     background-color: var(--bg-main);
     color: #e2e8f0;
-    font-family: var(--font-body);
+    font-family: var(--font-sans);
     overflow-x: hidden;
     margin: 0;
     padding: 0;
     -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
 }
 
-/* Crisp Industrial Card Panel */
+/* Industrial High-Density Panel */
 .panel-card {
-  background-color: #131823;
-  border: 1px solid #1e2638;
-  border-radius: 8px;
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
   transition: border-color 0.15s ease, background-color 0.15s ease;
 }
 
 .panel-card:hover {
-  border-color: #2e3b54;
+  border-color: #2b3248;
 }
 
-.panel-card-accent {
-  background-color: #131b2b;
-  border: 1px solid #2563eb;
-  border-radius: 8px;
+.panel-card-active {
+  background-color: #151926;
+  border-color: #3b82f6;
 }
 
-/* Custom Scrollbar */
+/* Custom Subdued Scrollbar */
 ::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+  width: 5px;
+  height: 5px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #0b0f17;
+  background: var(--bg-main);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #1e2638;
-  border-radius: 3px;
+  background: #1e2230;
+  border-radius: 2px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #3b82f6;
+  background: #2563eb;
 }
 
 /* Skeleton Loading Animation */
 @keyframes skeleton-pulse {
-  0%, 100% { opacity: 0.4; }
-  50% { opacity: 0.8; }
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 0.7; }
 }
 
 .skeleton-box {
-  background-color: #1e2638;
-  animation: skeleton-pulse 1.5s ease-in-out infinite;
+  background-color: #1a1e2c;
+  animation: skeleton-pulse 1.4s ease-in-out infinite;
   border-radius: 4px;
 }
+
+/* Hide scrollbar for Chrome, Safari and Opera */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+/* Hide scrollbar for IE, Edge and Firefox */
+.no-scrollbar {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+

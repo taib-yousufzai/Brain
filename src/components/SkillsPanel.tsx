@@ -100,10 +100,10 @@ export default function SkillsPanel({ tools }: SkillsPanelProps) {
     <div className="max-w-6xl mx-auto space-y-4 sm:space-y-6 font-sans">
       
       {/* Header Panel */}
-      <div className="bg-[#131823] border border-[#1e2638] p-4 sm:p-6 rounded-lg space-y-3 sm:space-y-4">
+      <div className="bg-[#12141c] border border-[#1e2230] p-4 sm:p-6 rounded-lg space-y-3 sm:space-y-4">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div>
-            <h1 className="text-xl sm:text-2xl font-bold text-white font-['Plus_Jakarta_Sans']">
+            <h1 className="text-xl sm:text-2xl font-bold text-white font-sans">
               AI Skills & Open-Source Repositories
             </h1>
             <p className="text-xs text-slate-400 font-sans mt-1">
@@ -111,7 +111,7 @@ export default function SkillsPanel({ tools }: SkillsPanelProps) {
             </p>
           </div>
 
-          <div className="text-xs font-mono text-slate-400 bg-slate-900 px-3 py-1.5 rounded border border-slate-800 self-start sm:self-auto flex items-center gap-2">
+          <div className="text-xs font-mono text-slate-400 bg-[#090a0f] px-3 py-1.5 rounded border border-[#1e2230] self-start sm:self-auto flex items-center gap-2">
             <span className="px-2 py-0.5 rounded bg-purple-950 text-purple-300 border border-purple-800 font-mono text-[10px] font-bold uppercase">
               SKILL
             </span>
@@ -125,16 +125,16 @@ export default function SkillsPanel({ tools }: SkillsPanelProps) {
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
           placeholder="Filter skills by keyword, protocol, or framework (e.g. MCP, RAG, Scraper)..."
-          className="w-full bg-[#0b0f17] border border-slate-700 rounded-md px-3.5 py-2.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-blue-500 font-sans"
+          className="w-full bg-[#090a0f] border border-[#1e2230] rounded px-3.5 py-2.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-blue-500 font-sans"
         />
       </div>
 
       {/* Main Grid Display */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4 font-sans">
         {filteredVault.map((skill, index) => (
           <div
             key={index}
-            className="bg-[#131823] border border-[#1e2638] p-4 sm:p-5 rounded-lg space-y-3 flex flex-col justify-between hover:border-slate-700 transition-colors"
+            className="bg-[#12141c] border border-[#1e2230] p-4 sm:p-5 rounded-lg space-y-3 flex flex-col justify-between hover:border-slate-700 transition-colors"
           >
             <div className="space-y-2">
               <div className="flex items-center justify-between font-mono text-xs">

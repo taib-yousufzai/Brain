@@ -3748,13 +3748,13 @@ export const PARSED_PUBLIC_TOOLS: Tool[] = [
   {
     "id": "node-289",
     "title": "vercel-labs/agent-browser",
-    "domain": "SEO",
+    "domain": "Development",
     "subCapability": "vercel-labs/agent-browser",
     "url": "",
     "description": "token efficient version of playwrite",
     "rating": 9.6,
     "tags": [
-      "seo",
+      "development",
       "ai-inbox"
     ]
   },

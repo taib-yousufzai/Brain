@@ -144,10 +144,10 @@ export default function NotesPanel() {
     <div className="max-w-4xl mx-auto space-y-6 font-sans">
       
       {/* Section Header */}
-      <div className="bg-[#131823] border border-[#1e2638] p-5 sm:p-6 rounded-lg space-y-4">
+      <div className="bg-[#12141c] border border-[#1e2230] p-5 sm:p-6 rounded-lg space-y-4">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div>
-            <h1 className="text-xl sm:text-2xl font-bold text-white font-['Plus_Jakarta_Sans']">
+            <h1 className="text-xl sm:text-2xl font-bold text-white font-sans">
               Notes & Knowledge Vault
             </h1>
             <p className="text-xs text-slate-400 font-sans mt-1">

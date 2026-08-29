@@ -1,7 +1,8 @@
 import { Tool, CustomNote } from '@/types';
 import { PARSED_PUBLIC_TOOLS } from './fileParser';
+import { enrichToolCapabilities } from './semanticCapabilityEngine';
 
-const STORAGE_KEY = 'brain_tools_dataset_v6';
+const STORAGE_KEY = 'brain_tools_dataset_v7';
 const NOTES_STORAGE_KEY = 'brain_custom_notes_v1';
 
 export const INITIAL_SEED_TOOLS: Tool[] = [
@@ -13,6 +14,7 @@ export const INITIAL_SEED_TOOLS: Tool[] = [
     url: 'https://github.com/blader/humanizer',
     description: 'Deletes 25+ generic AI writing tropes, synthetic buzzwords, and passive phrasing. Replaces AI slop with direct human copy.',
     rating: 10.0,
+    capabilities: ['ai slop elimination', 'humanizer', 'copywriting', 'content polish'],
     tags: ['ai-slop-killer', 'copywriting', 'humanizer', 'gold-tier'],
     notes: 'God-Stack Champion for AI Copy writing.',
   },
@@ -24,6 +26,7 @@ export const INITIAL_SEED_TOOLS: Tool[] = [
     url: 'https://github.com/coreyhaines31/marketingskills',
     description: 'Production-ready framework for landing page copy, value proposition formulas, and email conversion sequences.',
     rating: 10.0,
+    capabilities: ['copywriting', 'value proposition', 'landing page copy', 'email marketing', 'conversion optimization'],
     tags: ['copywriter-killer', 'marketing', 'conversion', 'gold-tier'],
     notes: 'God-Stack Champion for Marketing Funnels.',
   },
@@ -35,6 +38,7 @@ export const INITIAL_SEED_TOOLS: Tool[] = [
     url: 'https://github.com/emilkowalski/design',
     description: 'Elite micro-interaction rules, smooth state transitions, layout spacing, and visual polish standards.',
     rating: 9.9,
+    capabilities: ['ui design', 'micro-interactions', 'design system', 'frontend taste'],
     tags: ['design-taste', 'ui-ux', 'micro-interactions', 'gold-tier'],
     notes: 'God-Stack Champion for Frontend Design Taste.',
   },
@@ -46,6 +50,7 @@ export const INITIAL_SEED_TOOLS: Tool[] = [
     url: '',
     description: 'Enforces YAGNI ladder, deletion over addition, and surgical code changes. Prevents over-engineering.',
     rating: 9.8,
+    capabilities: ['yagni ladder', 'minimal viable code', 'code refactoring', 'senior dev mode'],
     tags: ['senior-dev', 'clean-code', 'yagni'],
     notes: 'Core development rule set.',
   },
@@ -57,6 +62,7 @@ export const INITIAL_SEED_TOOLS: Tool[] = [
     url: 'https://github.com/sahir619/fable-method',
     description: '7-step operational framework: Classify -> Define Done -> Evidence -> Surgical Act -> Verify -> Report.',
     rating: 9.9,
+    capabilities: ['systematic debugging', 'verification', 'fable method', 'testing'],
     tags: ['systematic-debugging', 'fable-method', 'testing'],
     notes: 'Core operational skill.',
   },
@@ -68,6 +74,7 @@ export const INITIAL_SEED_TOOLS: Tool[] = [
     url: '',
     description: 'Audit installed node_modules / package versions before writing code to prevent hallucinated APIs.',
     rating: 9.7,
+    capabilities: ['api verification', 'type safety', 'package auditing', 'context7'],
     tags: ['api-audit', 'type-safety', 'context7'],
     notes: 'Dependency safety check.',
   },
@@ -79,6 +86,7 @@ export const INITIAL_SEED_TOOLS: Tool[] = [
     url: '',
     description: 'Tracks sub-tasks with explicit state numbering, strike-through progress, and final outcome reporting.',
     rating: 9.6,
+    capabilities: ['task tracking', 'subtask numbering', 'audit log', 'progress observer'],
     tags: ['task-observer', 'progress-tracker'],
     notes: 'Task execution tracker.',
   },
@@ -96,7 +104,7 @@ function deduplicateTools(list: Tool[]): Tool[] {
     if (!seenIds.has(t.id) && !seenTitles.has(normTitle)) {
       seenIds.add(t.id);
       seenTitles.add(normTitle);
-      result.push(t);
+      result.push(enrichToolCapabilities(t));
     }
   }
 
@@ -135,6 +143,8 @@ export function saveStoredTools(tools: Tool[]): void {
   }
 }
 
+const FEEDBACK_STORAGE_KEY = 'brain_user_feedback_v1';
+
 export function getStoredNotes(): CustomNote[] {
   if (typeof window === 'undefined') return [];
   try {
@@ -154,3 +164,24 @@ export function saveStoredNotes(notes: CustomNote[]): void {
     console.error('Error saving notes to storage:', error);
   }
 }
+
+export function getStoredFeedback(): import('@/types').UserFeedback[] {
+  if (typeof window === 'undefined') return [];
+  try {
+    const storedStr = localStorage.getItem(FEEDBACK_STORAGE_KEY);
+    return storedStr ? JSON.parse(storedStr) : [];
+  } catch (error) {
+    console.error('Error reading feedback from storage:', error);
+    return [];
+  }
+}
+
+export function saveStoredFeedback(feedbackList: import('@/types').UserFeedback[]): void {
+  if (typeof window === 'undefined') return;
+  try {
+    localStorage.setItem(FEEDBACK_STORAGE_KEY, JSON.stringify(feedbackList));
+  } catch (error) {
+    console.error('Error saving feedback to storage:', error);
+  }
+}
+
